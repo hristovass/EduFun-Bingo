@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Izberi avatar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+    /* DARK THEME */
+
+    body.dark {
+        background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+        color: #e5e7eb !important;
+    }
+
+    body.dark main {
+        background-color: #0f172a !important;
+        border: 1px solid #475569 !important;
+        color: #e5e7eb !important;
+    }
+
+    body.dark h1,
+    body.dark p {
+        color: #e5e7eb !important;
+    }
+
+    /* Avatar box */
+    body.dark #avatar-container > div {
+        background-color: #020617 !important;
+        border-color: #475569 !important;
+    }
+
+    body.dark #avatar-container img {
+        background-color: transparent !important;
+    }
+
+    body.dark #avatar-container p {
+        color: #fecaca !important; /* светло црвено за "locked" текстот */
+    }
+
+    /* Back button */
+    body.dark button {
+        background-color: #2563eb !important;
+        color: #e5e7eb !important;
+        border-color: #2563eb !important;
+    }
+
+    body.dark button:hover {
+        background-color: #1d4ed8 !important;
+    }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center p-6">
+
+<main class="bg-white/80 backdrop-blur-md p-6 rounded-3xl shadow-xl w-full max-w-lg space-y-6">
+
+    <h1 class="text-2xl font-bold text-center text-gray-800">Izberi svoj avatar</h1>
+
+    <p class="text-center text-gray-600">Klikni na avatar ✨</p>
+
+    <div class="grid grid-cols-2 gap-4" id="avatar-container"></div>
+
+    <button onclick="window.location.href='index.html'"
+            class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
+        Nazaj
+    </button>
+    <!-- MODAL FOR AVATAR SELECTION -->
+    <div id="avatarModal"
+        class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-[#0f172a] p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4">
+            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Avatar izbran!</h2>
+            <img id="selectedAvatarImg" class="w-32 h-32 rounded-2xl shadow-lg border-2 border-purple-400">
+        </div>
+    </div>
+
+</main>
+
+<script>
+    // init dark / light theme
+    (function initTheme() {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.body.classList.toggle('dark', theme === 'dark');
+    })();
+
+    // ID igralca
+    const playerId = localStorage.getItem("avatar_select_player");
+
+    if (!playerId) {
+        alert("Napaka: Ni izbranega igralca!");
+        window.location.href = "index.html";
+    }
+
+    // Točke iz Supabase Leaderboard-a
+    let score = 0;
+
+    // Osnovni avatarji
+    const basicAvatars = [
+        { file: "boy1.jpg" },
+        { file: "boy2.jpg" },
+        { file: "girl1.jpg" },
+        { file: "girl2.jpg" }
+    ];
+
+    // Zaklenjeni avatarji
+    const lockedAvatars = [
+        { file: "avatar_gold.jpg", unlockAt: 1000 },
+        { file: "avatar_diamond.jpg", unlockAt: 2000 },
+        { file: "avatar_legend.jpg", unlockAt: 5000 }
+    ];
+
+    const container = document.getElementById("avatar-container");
+
+    // BOX za avatar
+    function createAvatarBox(avatar, locked) {
+        const div = document.createElement("div");
+        div.className =
+            "cursor-pointer border-2 rounded-2xl p-2 bg-white transition hover:scale-105 hover:shadow-lg text-center";
+
+        div.innerHTML = `
+            <img src="images/avatars/${avatar.file}"
+                 class="rounded-xl w-full h-auto ${locked ? 'opacity-40' : ''}">
+            ${locked ? `<p class="text-red-500 text-sm mt-1">🔒 ${avatar.unlockAt} pts</p>` : ""}
+        `;
+
+        if (!locked) {
+    div.onclick = () => {
+        localStorage.setItem("avatar_" + playerId, avatar.file);
+
+        document.getElementById("selectedAvatarImg").src = "images/avatars/" + avatar.file;
+        const modal = document.getElementById("avatarModal");
+        modal.classList.remove("hidden");
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 800);
+    };
+        } else {
+            div.onclick = () => {
+                alert("Ta avatar se odklene pri " + avatar.unlockAt + " točkah! 🔒");
+            };
+        }
+
+        return div;
+    }
+
+    // Rendering avatarjev
+    function renderAvatars() {
+        container.innerHTML = "";
+
+        // osnovni – vedno odklenjeni
+        basicAvatars.forEach(av => container.appendChild(createAvatarBox(av, false)));
+
+        // zaklenjeni po točkah
+        lockedAvatars.forEach(av => {
+            const isLocked = score < av.unlockAt;
+            container.appendChild(createAvatarBox(av, isLocked));
+        });
+    }
+
+    // 1) prvo narišemo avatarje z default score = 0
+    renderAvatars();
+
+    // 2) potem asinhono dobimo pravi score in, če se razlikuje, osvežimo
+    window.api.getTotalScore(playerId).then(res => {
+        const newScore = res?.total || 0;
+        if (newScore !== score) {
+            score = newScore;
+            renderAvatars();
+        }
+    }).catch(err => {
+        console.error("Napaka pri getTotalScore:", err);
+        // v najslab slučaj ostane score = 0, avatarji vseeno vidni
+    });
+
+</script>
+
+</body>
+</html>

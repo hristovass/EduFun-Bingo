@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz Bingo — Statistika</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* DARK TEMA – podobno kot ostale strani */
+    body.dark {
+      background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+      color: #e5e7eb !important;
+    }
+
+    body.dark main {
+      background-color: #020617 !important;
+      border-color: #334155 !important;
+      color: #e5e7eb !important;
+    }
+
+    body.dark h1,
+    body.dark h2,
+    body.dark p,
+    body.dark span,
+    body.dark th,
+    body.dark td {
+      color: #e5e7eb !important;
+    }
+
+    body.dark .card {
+      background-color: #020617 !important;
+      border-color: #1f2937 !important;
+      color: #e5e7eb !important;
+    }
+
+    body.dark #reset-btn {
+      border-color: #f97373 !important;
+      color: #fecaca !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-slate-900 flex items-center justify-center">
+  <main class="w-full max-w-4xl mx-auto p-6 bg-white/80 rounded-3xl shadow-lg border border-slate-200">
+    <h1 class="text-3xl font-bold mb-6 text-center">📊 Statistika po predmetih</h1>
+
+    <p id="no-data" class="text-center text-slate-500 hidden">
+      Še ni zabeleženih rezultatov. Najprej odigraj kakšno igro 😊
+    </p>
+
+    <section id="stats-section" class="space-y-6 hidden">
+      <!-- TABELA -->
+      <div class="card overflow-x-auto rounded-2xl bg-white/80 border border-slate-200 shadow-lg">
+        <table class="min-w-full text-sm">
+          <thead class="bg-slate-100/80">
+            <tr>
+              <th class="px-4 py-3 text-left font-semibold">Predmet / kategorija</th>
+              <th class="px-4 py-3 text-right font-semibold">Pravilni</th>
+              <th class="px-4 py-3 text-right font-semibold">Vsi odgovori</th>
+              <th class="px-4 py-3 text-right font-semibold">Uspešnost</th>
+            </tr>
+          </thead>
+          <tbody id="stats-table-body" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+
+      <!-- GRAF -->
+      <div class="card bg-white/80 border border-slate-200 rounded-2xl p-4 shadow-lg">
+        <h2 class="text-xl font-semibold mb-2">Pravilni odgovori po predmetih</h2>
+        <canvas id="stats-chart" height="120"></canvas>
+      </div>
+
+      <!-- "Heatmap" kartice -->
+      <div class="card bg-white/80 border border-slate-200 rounded-2xl p-4 shadow-lg">
+        <h2 class="text-xl font-semibold mb-3">Hitri pregled (barvna uspešnost)</h2>
+        <div id="heatmap" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+      </div>
+
+      <!-- Reset -->
+      <button
+        id="reset-btn"
+        class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/70 text-red-600 hover:bg-red-500/10 transition"
+      >
+        ♻ Resetiraj statistiko
+      </button>
+    </section>
+
+    <!-- Nazaj na začetek / nova igra -->
+    <div class="mt-8 text-center">
+      <a href="index.html"
+         class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-semibold shadow-lg shadow-emerald-500/30 transition">
+        ⬅ Nazaj na začetek
+      </a>
+    </div>
+  </main>
+
+  <script>
+    const STATS_KEY = 'quizBingoStats';
+
+    function getStats() {
+      const raw = localStorage.getItem(STATS_KEY);
+      if (!raw) return {};
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return {};
+      }
+    }
+
+    function clearStats() {
+      localStorage.removeItem(STATS_KEY);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      /* 🔹 Uporabi shranjeno temo (light / dark) */
+      const theme = localStorage.getItem('theme') || 'light';
+      document.body.classList.toggle('dark', theme === 'dark');
+
+      // 🔹 mapa: ID kategorije -> ime predmeta (Angleščina, Matematika, ...)
+      const categoriesById = {};
+      if (window.api?.loadMenu) {
+        try {
+          const menu = await window.api.loadMenu();
+          (menu.categories || []).forEach(cat => {
+            categoriesById[String(cat.id)] = cat.name;
+          });
+        } catch (e) {
+          console.error('Napaka pri loadMenu v stats.html:', e);
+        }
+      }
+
+      function displayName(key) {
+        return categoriesById[String(key)] || key;
+      }
+
+      const stats = getStats();
+      const subjects = Object.keys(stats);
+
+      const noDataEl = document.getElementById('no-data');
+      const statsSection = document.getElementById('stats-section');
+
+      if (subjects.length === 0) {
+        noDataEl.classList.remove('hidden');
+        return;
+      }
+
+      statsSection.classList.remove('hidden');
+
+      // --- tabela ---
+      const tbody = document.getElementById('stats-table-body');
+      subjects.forEach(subKey => {
+        const { correct, total } = stats[subKey];
+        const rate = total ? Math.round((correct / total) * 100) : 0;
+        const name = displayName(subKey);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="px-4 py-2 font-medium">${name}</td>
+          <td class="px-4 py-2 text-right">${correct}</td>
+          <td class="px-4 py-2 text-right">${total}</td>
+          <td class="px-4 py-2 text-right">${rate}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // --- podatki za graf: ŠTEVILO PRAVILNIH ODGOVOROV ---
+      const labels = subjects.map(k => displayName(k));
+      const correctCounts = subjects.map(k => {
+        const { correct } = stats[k];
+        return correct || 0;
+      });
+
+      const ctx = document.getElementById('stats-chart').getContext('2d');
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+      gradient.addColorStop(0, '#22c55e');
+      gradient.addColorStop(1, '#16a34a');
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Pravilni odgovori',
+            data: correctCounts,
+            backgroundColor: gradient,
+            borderColor: '#bbf7d0',
+            borderWidth: 1,
+            borderRadius: 12,
+            borderSkipped: false,
+            barThickness: 40
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(15,23,42,0.95)',
+              titleColor: '#e5e7eb',
+              bodyColor: '#e5e7eb',
+              padding: 10,
+              borderWidth: 1,
+              borderColor: 'rgba(148,163,184,0.5)',
+              callbacks: {
+                label: (ctx) => {
+                  const index = ctx.dataIndex;
+                  const key = subjects[index];
+                  const name = displayName(key);
+                  const correct = stats[key]?.correct || 0;
+                  const total = stats[key]?.total || 0;
+                  const percent = total ? Math.round((correct / total) * 100) : 0;
+                  return ` ${name}: ${correct}/${total} (${percent}%)`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: {
+                color: theme === 'dark' ? '#cbd5f5' : '#0f172a',
+                font: { size: 12, weight: '600' }
+              }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(148,163,184,0.25)' },
+              ticks: {
+                color: theme === 'dark' ? '#cbd5f5' : '#0f172a',
+                precision: 0
+              }
+            }
+          }
+        }
+      });
+
+      // --- "heatmap" kartice ---
+      const heatmap = document.getElementById('heatmap');
+      subjects.forEach(subKey => {
+        const { correct, total } = stats[subKey];
+        const rate = total ? Math.round((correct / total) * 100) : 0;
+        const hue = (rate / 100) * 120;
+        const name = displayName(subKey);
+
+        const card = document.createElement('div');
+        card.className = 'rounded-xl p-3 text-sm font-medium shadow-md';
+        card.style.backgroundColor = `hsl(${hue}, 70%, 35%)`;
+        card.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span>${name}</span>
+            <span>${rate}%</span>
+          </div>
+          <div class="text-xs mt-1 opacity-80">${correct}/${total} pravilnih</div>
+        `;
+        heatmap.appendChild(card);
+      });
+
+      // --- reset gumb ---
+      document.getElementById('reset-btn').addEventListener('click', () => {
+        if (confirm('Res želiš izbrisati vso statistiko?')) {
+          clearStats();
+          location.reload();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

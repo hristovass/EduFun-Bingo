@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Bingo — Main Menu</title>
+
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Dark theme styles -->
+    <style>
+    /* MAIN DARK BACKGROUND */
+    body.dark {
+        background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+        color: #e5e7eb !important;
+    }
+
+    body.dark main {
+        background-color: #0f172a !important; 
+        color: #e5e7eb !important;
+        border-color: #475569 !important;
+    }
+
+    /* Header and footer text */
+    body.dark header,
+    body.dark footer,
+    body.dark h1,
+    body.dark h2,
+    body.dark h3,
+    body.dark label,
+    body.dark p,
+    body.dark span {
+        color: #e5e7eb !important;
+    }
+
+    /* Grade + Category cards */
+    /* Grade cards (DARK) */
+body.dark #grade-cards div {
+    background-color: #334155 !important; 
+    border-color: #475569 !important;     
+    color: #e5e7eb !important;
+}
+
+/* Grade hover */
+body.dark #grade-cards div:hover {
+    background-color: #475569 !important;
+    transform: scale(1.03);
+}
+
+/* Grade selected */
+body.dark #grade-cards .selected {
+    background-color: #1e3a8a !important; 
+    border-color: #3b82f6 !important;
+}
+
+    /* Add Player button */
+    body.dark #add-player-btn {
+        background-color: #1d4ed8 !important; 
+        color: white !important;
+        border-color: #3b82f6 !important;
+    }
+
+    body.dark #add-player-btn:hover {
+        background-color: #2563eb !important;
+    }
+
+    /* Players box */
+    body.dark #players-list div {
+        background-color: #334155 !important;
+        border-color: #475569 !important;
+        color: #e5e7eb !important;
+    }
+
+    /* Start button disabled */
+    body.dark #start-game.bg-gray-300 {
+        background-color: #475569 !important;
+        color: #94a3b8 !important;
+    }
+
+    /* Start button enabled */
+    body.dark #start-game.bg-blue-600 {
+        background-color: #2563eb !important;
+        color: white !important;
+    }
+
+    /* Settings button */
+    body.dark #open-settings {
+        color: #e5e7eb !important;
+        border-color: #9ca3af !important;
+        background-color: transparent !important;
+    }
+
+    body.dark #open-settings:hover {
+        background-color: #111827 !important;
+    }
+
+    /* Settings modal overlay */
+    body.dark #settingsModal {
+        background-color: rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Settings modal card */
+    body.dark #settingsModal > div {
+        background-color: #111827 !important;
+        color: #e5e7eb !important;
+    }
+
+    body.dark #settingsModal h2,
+    body.dark #settingsModal label,
+    body.dark #settingsModal span {
+        color: #e5e7eb !important;
+    }
+
+    /* Close settings button */
+    body.dark #close-settings {
+        background-color: #1f2937 !important;
+        color: #e5e7eb !important;
+        border: 1px solid #374151 !important;
+    }
+
+    body.dark #close-settings:hover {
+        background-color: #374151 !important;
+    }
+
+    
+    /* Leaderboard + Statistika buttons in dark */
+    body.dark button[onclick*="leaderboard.html"],
+    body.dark button[onclick*="stats.html"] {
+        background: linear-gradient(to right, #020617, #111827) !important;
+        color: #e5e7eb !important;
+        border-color: #4b5563 !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    } 
+
+    body.dark button[onclick*="leaderboard.html"]:hover,
+    body.dark button[onclick*="stats.html"]:hover {
+        background: linear-gradient(to right, #020617, #020617) !important;
+        border-color: #a855f7 !important;
+    }
+
+    .avatar-btn {
+        background-color: #e9d5ff; 
+        color: #4b5563;
+    }
+    body.dark .avatar-btn {
+        background-color: #7c3aed !important;  
+        color: #f9fafb !important;
+        border: 1px solid #a855f7;
+    }
+
+    body.dark .avatar-btn:hover {
+        background-color: #6d28d9 !important;
+    }
+     /* Add Player button - DARK MODE */
+body.dark #add-player-btn {
+    background: linear-gradient(to right, #1e1b4b, #312e81, #4c1d95) !important;
+    color: #e5e7eb !important;
+    border: 1px solid #4338ca !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4) !important;
+}
+
+body.dark #add-player-btn:hover {
+    background: linear-gradient(to right, #1e1b4b, #3730a3, #5b21b6) !important;
+    box-shadow: 0 12px 25px rgba(168, 85, 247, 0.4) !important;
+}
+
+    /* Category cards in dark mode */
+body.dark .category-card {
+    background-color: #1e293b !important;
+    border-color: #475569 !important;
+    color: #e5e7eb !important;
+}
+
+/* Category badge in dark mode */
+body.dark .category-badge {
+    background-color: #0f172a !important;
+    color: #f3e8ff !important;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Category icon highlight in dark mode */
+body.dark .category-icon {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+}
+
+/* Selected category card (dark) */
+body.dark #category-cards .selected {
+    background-color: #020617 !important;
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.4) !important;
+}
+
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6 flex items-center justify-center font-sans">
+
+<main class="w-full max-w-xl bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border border-gray-100 p-6 space-y-6">
+
+    <!-- SETTINGS BUTTON -->
+    <div class="flex justify-end">
+        <button id="open-settings"
+                type="button"
+                class="px-3 py-1 mb-2 text-sm rounded-full border border-gray-300 hover:bg-gray-100 flex items-center gap-2">
+            ⚙ Settings
+        </button>
+    </div>
+
+    <header class="text-center space-y-2">
+        <h1 class="text-3xl font-bold text-gray-800">Bingo kviz 🎯</h1>
+        <p class="text-gray-500">Pripravi igro in pritisni gumb za začetek kvingota!</p>
+    </header>
+
+    <!-- Leaderboard -->
+    <button
+    type="button"
+    onclick="window.location.href='leaderboard.html'"
+    class="w-full px-5 py-3 rounded-full border border-purple-300
+           bg-gradient-to-r from-purple-50 to-pink-50
+           text-purple-700 font-semibold tracking-wide
+           shadow-sm hover:shadow-md hover:from-purple-100 hover:to-pink-100
+           transition-all duration-200 flex items-center justify-center gap-2">
+    
+    <span class="text-xl">🏆</span>
+    <span>Poglej lestvico</span>
+</button>
+
+<!-- Statistika znanja -->
+<button
+    type="button"
+    onclick="window.location.href='stats.html'"
+    class="mt-2 w-full px-5 py-3 rounded-full border border-purple-300
+           bg-gradient-to-r from-purple-50 to-pink-50
+           text-purple-700 font-semibold tracking-wide
+           shadow-sm hover:shadow-md hover:from-purple-100 hover:to-pink-100
+           transition-all duration-200 flex items-center justify-center gap-2">
+    
+    <span class="text-xl">📊</span>
+    <span>Statistika znanja</span>
+</button>
+
+    
+                    <!-- EduFun -->
+                    <button onclick="window.location.href='edufun.html'"
+                        class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors font-semibold">
+                        EduFun
+                    </button>
+<!-- AGE GROUPS -->
+    <section>
+        <label class="block text-sm font-semibold text-gray-700 mb-3">Izberi težavnost</label>
+        <div id="grade-cards" class="grid grid-cols-1 sm:grid-cols-3 gap-2"></div>
+    </section>
+
+    <!-- PLAYERS -->
+    <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Igralci</label>
+
+        <div id="players-list" class="space-y-2 text-sm text-gray-600">
+            <p>Ni še dodanih igralcev.</p>
+        </div>
+
+        <button
+    id="add-player-btn"
+    type="button"
+    onclick="window.api.openAddPlayerWindow()"
+    class="
+        mt-3 w-full px-5 py-3 rounded-full 
+        bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200
+        text-indigo-900 font-semibold tracking-wide shadow-sm
+        hover:shadow-md hover:from-indigo-300 hover:via-purple-300 hover:to-pink-300
+        transition-all duration-200 flex items-center justify-center gap-2
+    ">
+    <span class="text-lg">➕</span>
+    <span>Dodaj igralca</span>
+</button>
+    </div>
+
+    <!-- CATEGORIES -->
+    <section>
+        <label class="block text-sm font-semibold text-gray-700 mb-3">Izberi predmet (vsaj 1)</label>
+        <div id="category-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+    </section>
+
+    <!-- START BUTTON -->
+    <div class="pt-4 flex justify-center">
+        <button id="start-game"
+                type="button"
+                disabled
+                class="px-6 py-3 bg-gray-300 text-white rounded-lg cursor-not-allowed transition-all">
+            Začni igro ▶️
+        </button>
+    </div>
+
+    <footer class="pt-6 text-center text-sm text-gray-500 border-t border-gray-200">
+        <span class="font-semibold">Digitalna Brigada</span>
+    </footer>
+
+</main>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal"
+     class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-sm space-y-4">
+    <h2 class="text-xl font-semibold mb-2">Settings</h2>
+
+    <label class="flex items-center justify-between">
+      <span>Dark tema</span>
+      <input id="darkToggle" type="checkbox" class="h-5 w-5">
+    </label>
+
+    <label class="flex items-center justify-between">
+      <span>Muzika v ozadju</span>
+      <input id="musicToggle" type="checkbox" class="h-5 w-5">
+    </label>
+
+    <label class="flex items-center justify-between">
+      <span>Zvočni efekti </span>
+      <input id="sfxToggle" type="checkbox" class="h-5 w-5">
+    </label>
+
+    <div class="flex justify-end gap-2 pt-2">
+      <button id="close-settings"
+              class="px-3 py-1 rounded-lg border hover:bg-gray-100">Zatvori</button>
+    </div>
+  </div>
+</div>
+
+<!-- Separate JS file for fetching and rendering from backend -->
+<script src="index.js"></script>
+
+<script>
+/* ---------- CORE STATE ---------- */
+const MAX_PLAYERS = 4;
+
+let players = [];
+const playerKeys = new Set();
+let isGradeSelected = false;
+let categoriesSelected = 0;
+
+const selected = { grade: null, category: [] };
+const startBtn = document.getElementById("start-game");
+const addBtn = document.getElementById("add-player-btn");
+const playersList = document.getElementById("players-list");
+
+/* ---------- HELPERS ---------- */
+function updateAddPlayerButtonState() {
+    if (players.length >= MAX_PLAYERS) {
+        addBtn.disabled = true;
+        addBtn.classList.add('bg-gray-300','cursor-not-allowed','opacity-60');
+        addBtn.classList.remove('bg-blue-600','hover:bg-blue-700');
+    } else {
+        addBtn.disabled = false;
+        addBtn.classList.remove('bg-gray-300','cursor-not-allowed','opacity-60');
+        addBtn.classList.add('bg-blue-600','hover:bg-blue-700');
+    }
+}
+
+function enableStartButton() {
+    if (isGradeSelected && categoriesSelected > 0 && players.length > 0) {
+        startBtn.disabled = false;
+        startBtn.classList.remove("bg-gray-300", "cursor-not-allowed");
+        startBtn.classList.add("bg-blue-600", "hover:bg-blue-700", "cursor-pointer");
+    } else {
+        startBtn.disabled = true;
+        startBtn.classList.add("bg-gray-300", "cursor-not-allowed");
+        startBtn.classList.remove("bg-blue-600", "hover:bg-blue-700", "cursor-pointer");
+    }
+}
+
+/* ---- NEW: work with localStorage for players ---- */
+function getPlayerKey(player) {
+    return player?.id ?? `${player.first_name}::${player.last_name}`;
+}
+
+function savePlayersToStorage() {
+    try {
+        sessionStorage.setItem('players_list', JSON.stringify(players));
+    } catch (e) {
+        console.error('Ne morem shraniti igralcev v localStorage', e);
+    }
+}
+
+function renderPlayersFromState() {
+    playersList.innerHTML = "";
+
+    if (!players || players.length === 0) {
+        playersList.innerHTML = "<p>Ni še dodanih igralcev.</p>";
+        updateAddPlayerButtonState();
+        enableStartButton();
+        return;
+    }
+
+    players.forEach(player => {
+        const key = String(getPlayerKey(player));
+
+        const row = document.createElement("div");
+        row.dataset.key = key;
+        row.className = "p-2 border rounded-lg bg-white";
+
+        row.innerHTML = `
+            <div class="flex justify-between items-center">
+                <span>${player.first_name} ${player.last_name}</span>
+                <button class="px-2 py-1 text-sm rounded avatar-btn"
+                        onclick="openAvatarSelector('${key}')">
+                    Izberi avatar 🎨
+                </button>
+            </div>
+            <img id="avatar-${key}"
+                 class="w-12 h-12 rounded-full mt-2 hidden border-2 border-purple-400">
+        `;
+
+        playersList.appendChild(row);
+        playerKeys.add(key);
+    });
+
+    loadPlayerAvatars();
+    updateAddPlayerButtonState();
+    enableStartButton();
+}
+
+/* restore players on page load */
+(function restorePlayersFromStorage() {
+    const saved = sessionStorage.getItem('players_list');
+    if (!saved) return;
+
+    try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+            players = parsed;
+            renderPlayersFromState();
+        }
+    } catch (e) {
+        console.error('Napaka pri branju players_list iz localStorage', e);
+    }
+})();
+
+/* ---------- LOAD CATEGORIES ---------- */
+/* ---------- LOAD CATEGORIES (fancy mashup + DARK MODE SUPPORT) ---------- */
+async function loadCategories() {
+    const categories = (await window.api.loadMenu()).categories;
+
+    const container = document.getElementById("category-cards");
+    container.innerHTML = "";
+
+    // ikone glede na ime predmeta (fallback = 📚)
+    const subjectIcons = {
+        "Angleščina": "📘",
+        "Anglščina": "📘",
+        "Matematika": "➕",
+        "Naravoslovje": "🌿",
+        "Družboslovje": "🌍",
+        "Slovenščina": "📖",
+        "Likovna umetnost": "🎨",
+        "Glasba": "🎵"
+    };
+
+    categories.forEach(cat => {
+        const card = document.createElement("div");
+        card.dataset.id = cat.id;
+        card.dataset.name = cat.name;
+
+        const icon = subjectIcons[cat.name] || "📚";
+
+        // Base card style (light mode)
+        card.className =
+            "category-card p-4 border-2 border-gray-200 rounded-2xl cursor-pointer bg-white " +
+            "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md " +
+            "flex items-center justify-center text-center";
+
+        // Inner content with icon + badge
+        card.innerHTML = `
+            <div class="flex flex-col items-center gap-2">
+                <span class="category-icon text-2xl">${icon}</span>
+                <span class="category-badge px-4 py-1 rounded-full bg-purple-50 text-purple-700 
+                            font-semibold text-sm sm:text-base tracking-wide shadow-sm">
+                    ${cat.name}
+                </span>
+            </div>
+        `;
+
+        // click → select/unselect
+        card.onclick = () => {
+            if (card.classList.contains("selected")) {
+                card.classList.remove("selected", "border-purple-500", "bg-purple-50",
+                                      "dark-selected", "shadow-lg", "scale-[1.02]");
+                categoriesSelected--;
+            } else {
+                card.classList.add("selected", "border-purple-500", "bg-purple-50",
+                                   "dark-selected", "shadow-lg", "scale-[1.02]");
+                categoriesSelected++;
+            }
+            enableStartButton();
+        };
+
+        container.appendChild(card);
+    });
+}
+
+
+/* ---------- LOAD GRADES ---------- */
+async function loadGrades() {
+    const grades = (await window.api.loadMenu()).ageGroups;
+
+    const container = document.getElementById("grade-cards");
+    container.innerHTML = "";
+
+    grades.forEach(gr => {
+        const card = document.createElement("div");
+        card.dataset.id = gr.id;
+        card.className =
+            "p-4 border-2 border-gray-200 rounded-2xl cursor-pointer bg-white " +
+            "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md " +
+            "flex flex-col gap-1";
+
+        card.innerHTML = `
+            <h3 class="font-semibold text-lg">${gr.age_group}</h3>
+            <p class="text-sm text-gray-500">${gr.min_age} – ${gr.max_age} let</p>
+        `;
+
+        card.onclick = () => {
+            document.querySelectorAll("#grade-cards div")
+                .forEach(x => x.classList.remove("border-blue-500", "bg-blue-50", "selected"));
+
+            card.classList.add("border-blue-500", "bg-blue-50", "selected");
+
+            selected.grade = gr.id;
+            isGradeSelected = true;
+            enableStartButton();
+        };
+
+        container.appendChild(card);
+    });
+}
+
+/* initial load */
+loadCategories();
+loadGrades();
+
+/* ---------- AVATARS ---------- */
+function openAvatarSelector(playerId) {
+    localStorage.setItem("avatar_select_player", playerId);
+    window.location.href = "avatar.html";
+}
+
+function loadPlayerAvatars() {
+    players.forEach(p => {
+        const key = getPlayerKey(p);
+        const saved = localStorage.getItem("avatar_" + key);
+        if (saved) {
+            const img = document.getElementById("avatar-" + key);
+            if (img) {
+                img.src = "images/avatars/" + saved;
+                img.classList.remove("hidden");
+            }
+        }
+    });
+}
+
+/* ---------- PLAYER ADDED (from Electron) ---------- */
+updateAddPlayerButtonState();
+
+window.api.onPlayerAdded((player) => {
+    const key = getPlayerKey(player);
+
+    // prevent duplicates
+    if (playerKeys.has(String(key))) {
+        const existing = [...playersList.children].find(el => el.dataset?.key === String(key));
+        if (existing) {
+            existing.classList.add('ring-2','ring-red-400');
+            setTimeout(() => existing.classList.remove('ring-2','ring-red-400'), 700);
+        }
+        return;
+    }
+
+    // max 4 players
+    if (players.length >= MAX_PLAYERS) {
+        updateAddPlayerButtonState();
+        return;
+    }
+
+    // remove "no players" text
+    if (playersList.children[0]?.tagName === "P") {
+        playersList.innerHTML = "";
+    }
+
+    const row = document.createElement("div");
+    row.dataset.key = String(key);
+    row.className =
+        "p-3 border border-gray-200 rounded-2xl bg-white flex flex-col " +
+        "shadow-sm hover:shadow-md transition-shadow";
+
+    row.innerHTML = `
+        <div class="flex justify-between items-center">
+            <span>${player.first_name} ${player.last_name}</span>
+            <button class="px-2 py-1 text-sm rounded avatar-btn"
+                    onclick="openAvatarSelector('${key}')">
+                Izberi avatar 🎨
+            </button>
+        </div>
+        <img id="avatar-${key}"
+             class="w-12 h-12 rounded-full mt-2 hidden border-2 border-purple-400">
+    `;
+
+    playersList.appendChild(row);
+
+    players.push(player);
+    playerKeys.add(String(key));
+
+    // NEW: save to localStorage so they persist after avatar selection
+    savePlayersToStorage();
+
+    loadPlayerAvatars();
+    enableStartButton();
+    updateAddPlayerButtonState();
+});
+
+/* ---------- START GAME ---------- */
+startBtn.onclick = () => {
+    if (startBtn.disabled) return;
+
+    selected.category = [];
+    const categoriesInfo = [];     // 👈 tu bomo shranili {id, name}
+
+    document
+      .querySelectorAll("#category-cards .selected")
+      .forEach(c => {
+          const id   = c.dataset.id;
+          const name = c.dataset.name;
+          selected.category.push(id);             // za backend
+          categoriesInfo.push({ id, name });      // za statistiko
+      });
+
+    localStorage.setItem("parameters", JSON.stringify({
+        grade: selected.grade,
+        category: selected.category,    // ID-ji za backend
+        categoriesInfo: categoriesInfo, // 👈 NOVO: ID + ime
+        players: players
+    }));
+
+    window.location.href = "game.html";
+};
+
+</script>
+
+<script>
+/* ---------- SETTINGS (dark / music / sfx) ---------- */
+const settingsModal = document.getElementById('settingsModal');
+const openSettingsBtn = document.getElementById('open-settings');
+const closeSettingsBtn = document.getElementById('close-settings');
+const darkToggle = document.getElementById('darkToggle');
+const musicToggle = document.getElementById('musicToggle');
+const sfxToggle = document.getElementById('sfxToggle');
+
+function applyTheme(theme) {
+    document.body.classList.toggle('dark', theme === 'dark');
+}
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+applyTheme(savedTheme);
+darkToggle.checked = savedTheme === 'dark';
+
+const savedMusic = localStorage.getItem('music') || 'on';
+musicToggle.checked = savedMusic === 'on';
+
+const savedSfx = localStorage.getItem('sfx') || 'on';
+sfxToggle.checked = savedSfx === 'on';
+
+openSettingsBtn.addEventListener('click', () => {
+    settingsModal.classList.remove('hidden');
+});
+
+closeSettingsBtn.addEventListener('click', () => {
+    settingsModal.classList.add('hidden');
+});
+
+darkToggle.addEventListener('change', () => {
+    const theme = darkToggle.checked ? 'dark' : 'light';
+    localStorage.setItem('theme', theme);
+    applyTheme(theme);
+});
+
+musicToggle.addEventListener('change', () => {
+    const music = musicToggle.checked ? 'on' : 'off';
+    localStorage.setItem('music', music);
+});
+
+sfxToggle.addEventListener('change', () => {
+    const sfx = sfxToggle.checked ? 'on' : 'off';
+    localStorage.setItem('sfx', sfx);
+});
+</script>
+
+</body>
+</html>

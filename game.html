@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Bingo — Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes clickAnimation {
+            0% {
+                background: white;
+            }
+
+            25% {
+                background: red;
+            }
+
+            50% {
+                background: yellow;
+            }
+
+            75% {
+                background: lightgreen;
+            }
+
+            100% {
+                background: lightblue;
+            }
+        }
+
+        body.dark {
+            background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+            color: #e5e7eb !important;
+        }
+
+        body.dark h1,
+        body.dark h2,
+        body.dark h3,
+        body.dark p,
+        body.dark span {
+            color: #e5e7eb !important;
+        }
+
+        body.dark section {
+            background: #1e293b !important;
+            color: #e5e7eb !important;
+            border-color: #334155 !important;
+        }
+
+        body.dark .bg-gradient-to-r {
+            background: #1e293b !important;
+            color: #f1f5f9 !important;
+        }
+
+        body.dark .px-3.py-1.bg-gray-200 {
+            background: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+
+        body.dark .timerBar {
+            background: #3b82f6 !important;
+        }
+
+        body.dark .w-full.bg-gray-200 {
+            background: #1e293b !important;
+        }
+
+        body.dark .qButtons {
+            background: #334155 !important;
+            color: #f8fafc !important;
+            border-color: #475569 !important;
+        }
+
+        body.dark .qButtons:hover {
+            background: #475569 !important;
+        }
+
+        body.dark .qButtons.bg-white {
+            background: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        body.dark #boards>div {
+            background: #1e293b !important;
+            border-color: #475569 !important;
+        }
+
+        body.dark #boards div div {
+            color: #e2e8f0 !important;
+        }
+
+        body.dark .bg-blue-500 {
+            background: #2563eb !important;
+        }
+
+        body.dark .bg-yellow-400 {
+            background: #ca8a04 !important;
+        }
+
+        body.dark #toast {
+            background: #1e293b !important;
+            color: #f1f5f9 !important;
+            border-color: #475569 !important;
+        }
+
+        body.dark #winnerModal>div,
+        body.dark #winnerModal>div div {
+            background: #1e293b !important;
+            color: #f8fafc !important;
+            border-color: #334155 !important;
+        }
+
+        body.dark .board-grid div {
+            border-color: #64748b !important;
+        }
+
+        body.dark .board-grid div.bg-white {
+            background-color: #1e293b !important;
+        }
+
+        body.dark .board-grid div.bg-yellow-400 {
+            background-color: #ca8a04 !important;
+        }
+
+        body.dark [data-player] {
+            background-color: #0f172a !important;
+            border: 1px solid #475569 !important;
+        }
+
+        body.dark section {
+            border: 1px solid #475569 !important;
+        }
+
+        body.dark .bg-gradient-to-r {
+            background: #1e293b !important;
+            color: #e5e7eb !important;
+            border: 1px solid #475569 !important;
+        }
+
+        body.dark .qButtons.bg-green-500 {
+            background-color: #16a34a !important;
+            border-color: #16a34a !important;
+            color: #f9fafb !important;
+        }
+
+        body.dark .qButtons.bg-red-500 {
+            background-color: #ef4444 !important;
+            border-color: #ef4444 !important;
+            color: #f9fafb !important;
+        }
+
+        body.dark .streak-line {
+            color: #fdba74 !important;
+            font-weight: 600;
+        }
+
+        @keyframes bonusFlash {
+            0% {
+                background-color: #facc15;
+            }
+
+            50% {
+                background-color: #fde047;
+            }
+
+            100% {
+                background-color: #facc15;
+            }
+        }
+
+        .bonus-active {
+            animation: bonusFlash 0.8s infinite ease-in-out;
+        }
+
+        #skipBtn {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+            color: #1f2937;
+        }
+
+        #skipBtn:hover:not(:disabled) {
+            background-color: #e5e7eb;
+        }
+
+        #skipBtn #skipCounter {
+            color: #1f2937;
+        }
+
+        body.dark #skipBtn {
+            background-color: #111827;
+            border-color: #4b5563;
+            color: #f9fafb;
+        }
+
+        body.dark #skipBtn:hover:not(:disabled) {
+            background-color: #1f2937;
+        }
+
+        body.dark #skipBtn #skipCounter {
+            color: #4ade80;
+        }
+
+        /* Start overlay – svetel v light, temen v dark */
+        #startOverlay {
+            background: rgba(255, 255, 255, 0.8);
+            /* light tema: svetel veil */
+        }
+
+        body.dark #startOverlay {
+            background: rgba(15, 23, 42, 0.85);
+            /* dark tema: temen veil */
+        }
+
+        /* Kartica z odštevanjem */
+        #startOverlay .start-card {
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        body.dark #startOverlay .start-card {
+            background: #020617;
+            color: #e5e7eb;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6 lg:p-10 font-sans">
+    <main class="max-w-[1400px] mx-auto space-y-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <h1 class="text-3xl font-bold text-center flex-1 text-gray-800">Quiz Bingo! 🎯</h1>
+            <button onclick="window.location.href='index.html'"
+                class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors font-semibold">
+                Nova igra
+            </button>
+        </div>
+
+        <!-- Question Card -->
+        <section class="bg-white shadow-2xl rounded-2xl p-6 space-y-6">
+            <!-- TURN + AVATAR + TIMER -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img id="currentAvatar" src="" alt="Avatar"
+                        class="w-10 h-10 rounded-full border border-gray-300 shadow-sm hidden" />
+                    <span id="turn" class="px-3 py-1 rounded-full bg-blue-500 text-white font-medium"></span>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-gray-200 font-medium">⏱️ 15s</span>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                <div class="bg-blue-500 h-2 timerBar" style="width: 100%;"></div>
+            </div>
+
+            <div class="flex justify-center">
+                <img id="questionImage" src="" alt="Question Image" class="hidden" width="200px" height="150px" />
+            </div>
+
+            <!-- Question -->
+            <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-lg text-center">
+                <p id="question" class="text-lg font-medium"></p>
+            </div>
+
+            <!-- Answer buttons -->
+            <div class="grid grid-cols-2 gap-4">
+                <button id="0"
+                    class="qButtons py-4 border rounded-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"></button>
+                <button id="1"
+                    class="qButtons py-4 border rounded-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"></button>
+                <button id="2"
+                    class="qButtons py-4 border rounded-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"></button>
+                <button id="3"
+                    class="qButtons py-4 border rounded-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"></button>
+            </div>
+
+            <!-- Skip + 50/50 buttons -->
+            <div class="flex justify-center mt-4 gap-3">
+                <button id="skipBtn" class="px-4 py-2 rounded-lg border text-sm font-semibold
+                    transition hover:scale-105 bg-gray-700 text-white">
+                    ⏭️ Preskoči vprašanje
+                    (<span id="skipCounter" class="font-bold">2</span>/2)
+                </button>
+
+                <!-- 50/50 GUMB (skrit dokler ni 5 napačnih) -->
+                <button id="fiftyBtn" class="px-4 py-2 rounded-lg border text-sm font-semibold bg-purple-600 text-white
+                    transition hover:scale-105 hidden">
+                    🎲 Uporabi 50/50
+                </button>
+            </div>
+
+        </section>
+
+        <!-- Bingo Boards (dynamic) -->
+        <section id="boards" class="grid gap-6 justify-items-center"></section>
+
+        <div class="text-center text-sm text-gray-500 mt-8">
+            <span class="font-semibold">Digitalna Brigada</span>
+        </div>
+
+        <!-- AUDIO: background music + timer tick + correct/error -->
+        <audio id="bgMusic" src="./sounds/background.mp3" preload="auto" loop></audio>
+        <audio id="tickSound" src="./sounds/tick.mp3" preload="auto"></audio>
+        <audio id="correctSound" src="./sounds/correct.mp3" preload="auto"></audio>
+        <audio id="errorSound" src="./sounds/error.mp3" preload="auto"></audio>
+
+        <script>
+            /* ---------- TEMA ---------- */
+            (function initTheme() {
+                const theme = localStorage.getItem('theme') || 'light';
+                document.body.classList.toggle('dark', theme === 'dark');
+            })();
+
+            /* ---------- AUDIO NASTAVITVE ---------- */
+            function musicEnabled() {
+                return localStorage.getItem('music') !== 'off';
+            }
+
+            function sfxEnabled() {
+                return localStorage.getItem('sfx') !== 'off';
+            }
+
+            const bgMusic = document.getElementById('bgMusic');
+            const tickSound = document.getElementById('tickSound');
+            const correctSound = document.getElementById('correctSound');
+            const errorSound = document.getElementById('errorSound');
+
+            function playBgMusic() {
+                if (!musicEnabled() || !bgMusic) return;
+                bgMusic.volume = 0.3;
+                bgMusic.play().catch(() => { });
+            }
+
+            function stopBgMusic() {
+                if (!bgMusic) return;
+                bgMusic.pause();
+                bgMusic.currentTime = 0;
+            }
+
+            function playTick() {
+                if (!sfxEnabled() || !tickSound) return;
+                tickSound.currentTime = 0;
+                tickSound.play().catch(() => { });
+            }
+
+            function playCorrect() {
+                if (!sfxEnabled() || !correctSound) return;
+                correctSound.currentTime = 0;
+                correctSound.play().catch(() => { });
+            }
+
+            function playerror() {
+                if (!sfxEnabled() || !errorSound) return;
+                errorSound.currentTime = 0;
+                errorSound.play().catch(() => { });
+            }
+
+            /* ---------- STATISTIKA (localStorage) ---------- */
+            const STATS_KEY = 'quizBingoStats';
+
+            function getStats() {
+                const raw = localStorage.getItem(STATS_KEY);
+                if (!raw) return {};
+                try {
+                    return JSON.parse(raw);
+                } catch (e) {
+                    console.error('Napaka pri branju statistike:', e);
+                    return {};
+                }
+            }
+
+            function setStats(stats) {
+                localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+            }
+
+            /**
+             * subject = predmet / kategorija (npr. Matematika)
+             * isCorrect = true/false (ali je bil odgovor pravilen)
+             */
+            function updateStats(subject, isCorrect) {
+                if (!subject) subject = 'Neznano';
+
+                const stats = getStats();
+
+                if (!stats[subject]) {
+                    stats[subject] = { correct: 0, total: 0 };
+                }
+
+                stats[subject].total++;
+                if (isCorrect) {
+                    stats[subject].correct++;
+                }
+
+                setStats(stats);
+            }
+
+            function resetStats() {
+                localStorage.removeItem(STATS_KEY);
+            }
+
+            /* ---------- GAME STATE ---------- */
+            let game = [];
+            let gameData = [];
+            let parameters = {};
+            let isCorrectAnswer = false;
+            let statsSubject = 'Neznano';
+            let questionIndex = -1;
+            let limitIndex = 20;
+
+            const questionImage = document.getElementById("questionImage");
+            let playerIds = [];
+            let playerNames = [];
+            let playerAvatars = []; // poti do avatarjev
+            let playerCount = 0;
+            let boards = [];
+            let currentPlayer = 0;
+            let gameOver = false;
+            let toastTimer = null;
+
+            let streaks = [];
+            let playerBonus = [];
+
+            let skipCounts = [];
+            const maxSkipsPerPlayer = 2;
+
+            let failStreak = [];
+            let fiftyAvailable = [];
+            let fiftyUsedAlready = [];
+
+            let timerInterval;
+            let timeRemaining = 15;
+
+            const progressBar = document.querySelector('.timerBar');
+            const timerDisplay = document.querySelector('.px-3.py-1.bg-gray-200');
+            const skipBtn = document.getElementById("skipBtn");
+            const skipCounter = document.getElementById("skipCounter");
+            const fiftyBtn = document.getElementById("fiftyBtn");
+            const currentAvatar = document.getElementById("currentAvatar");
+
+            /* ---------- SKIP GUMB ---------- */
+            function updateSkipButton() {
+                if (!skipBtn || !skipCounter || playerCount === 0) return;
+
+                const pIdx = currentPlayer;
+                const used = skipCounts[pIdx] || 0;
+                const remaining = Math.max(0, maxSkipsPerPlayer - used);
+
+                skipCounter.textContent = remaining;
+
+                if (gameOver || remaining === 0) {
+                    skipBtn.disabled = true;
+                    skipBtn.classList.add("opacity-60", "cursor-not-allowed");
+                } else {
+                    skipBtn.disabled = false;
+                    skipBtn.classList.remove("opacity-60", "cursor-not-allowed");
+                }
+            }
+
+            function skipQuestion() {
+                if (gameOver || playerCount === 0) return;
+
+                const pIdx = currentPlayer;
+
+                if (skipCounts[pIdx] >= maxSkipsPerPlayer) {
+                    showToast("Ta igralec nima več preskokov 🙃", "error");
+                    updateSkipButton();
+                    return;
+                }
+
+                skipCounts[pIdx]++;
+                updateSkipButton();
+
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                stopBgMusic();
+
+                showToast("Vprašanje preskočeno. Brez točk in brez kazni 🙂", "info");
+
+                play();
+            }
+
+            /* ---------- 50 / 50 ---------- */
+            function updateFiftyButton() {
+                if (!fiftyBtn) return;
+                const pIdx = currentPlayer;
+
+                if (fiftyAvailable[pIdx]) {
+                    fiftyBtn.classList.remove("hidden");
+                } else {
+                    fiftyBtn.classList.add("hidden");
+                }
+            }
+
+            function resetAnswerButtons() {
+                const btns = [...document.getElementsByClassName("qButtons")];
+                btns.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove("opacity-30");
+                });
+            }
+
+            function activateFiftyFifty(correctIndex) {
+    const buttons = [...document.getElementsByClassName("qButtons")];
+
+    // Vedno spremeni correctIndex v ŠTEVILKO
+    const correct = Number(correctIndex);
+
+    const correctBtn = buttons.find(btn => Number(btn.id) === correct);
+
+    // Filtriraj napačne gumbe
+    let wrongButtons = buttons.filter(btn => Number(btn.id) !== correct);
+
+    // Izberi dva napačna gumba za skritje
+    let toHide = wrongButtons.sort(() => 0.5 - Math.random()).slice(0, 2);
+
+    // Skrij samo napačne
+    toHide.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add("opacity-30");
+    });
+
+    // 🔒 PRAVILNI GUMB SE NIKOLI NE SME SKRITI
+    if (correctBtn) {
+        correctBtn.disabled = false;
+        correctBtn.classList.remove("opacity-30");
+    }
+}
+
+
+            /* ---------- TIMER ---------- */
+            function startTimer() {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                if (gameOver) return;
+
+                const hasBonus = playerBonus[currentPlayer];
+                timeRemaining = hasBonus ? 20 : 15;
+
+                updateTimerDisplay(timeRemaining);
+                if (hasBonus) {
+                    timerDisplay.innerText = "⏱️ BONUS +5s 🎉";
+                    progressBar.classList.add("bonus-active");
+                } else {
+                    progressBar.classList.remove("bonus-active");
+                }
+                updateProgressBar(timeRemaining);
+                playerBonus[currentPlayer] = false;
+
+                playBgMusic();
+
+                timerInterval = setInterval(function () {
+                    timeRemaining--;
+                    updateTimerDisplay(timeRemaining);
+                    updateProgressBar(timeRemaining);
+
+                    playTick();
+
+                    if (timeRemaining <= 0 && !gameOver) {
+                        clearInterval(timerInterval);
+                        stopBgMusic();
+                        play();
+                    }
+                }, 1000);
+            }
+
+            function updateTimerDisplay(time) {
+                timerDisplay.innerText = `⏱️ ${time}s`;
+            }
+
+            function updateProgressBar(time) {
+                if (time <= 10 && time > 5) {
+                    progressBar.classList.add("bg-orange-500");
+                    progressBar.classList.remove("bg-blue-500");
+                } else if (time <= 5) {
+                    progressBar.classList.add("bg-rose-500");
+                    progressBar.classList.remove("bg-orange-500");
+                } else {
+                    progressBar.classList.add("bg-blue-500");
+                    progressBar.classList.remove("bg-rose-500");
+                }
+                const percentage = (time / 15) * 100;
+                progressBar.style.width = `${percentage}%`;
+            }
+
+            /* ---------- POMOŽNE ---------- */
+            function shuffle(array) {
+                let currentIndex = array.length;
+                while (currentIndex != 0) {
+                    let randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    [array[currentIndex], array[randomIndex]] = [
+                        array[randomIndex], array[currentIndex]
+                    ];
+                }
+            }
+
+            /* ---------- PLAYER KEY (kot index.html) ---------- */
+            function getPlayerKey(player) {
+                return player?.id ?? `${player.first_name}::${player.last_name}`;
+            }
+
+            /* ---------- NALAGANJE PODATKOV ---------- */
+            async function enterData() {
+                console.log("Loading game data...");
+                parameters = JSON.parse(localStorage.getItem('parameters'));
+
+                if (!parameters) {
+                    console.error("Ni parameters v localStorage");
+                    return;
+                }
+
+                // 🧹 ZAČETEK NOVE IGRE → pobrišemo staro statistiko
+                resetStats();
+
+                // 🔑 subject za statistiko:
+                // če je izbran NATANČNO 1 predmet, uporabimo njegov ID kot ključ
+                if (Array.isArray(parameters.category) && parameters.category.length === 1) {
+                    statsSubject = String(parameters.category[0]);   // npr. "3" → v stats.html se prikaže kot ime predmeta
+                } else {
+                    // več predmetov ali nič → vse gre pod "Neznano"
+                    statsSubject = 'Neznano';
+                }
+
+                playerCount = parameters.players.length;
+                playerIds = [];
+                playerNames = [];
+                playerAvatars = [];
+
+                for (let i = 0; i < playerCount; i++) {
+                    const player = parameters.players[i];
+
+                    playerIds.push(parseInt(player.id));
+                    playerNames.push(`${player.first_name} ${player.last_name}`);
+
+                    const key = String(getPlayerKey(player));
+                    const savedAvatar = localStorage.getItem("avatar_" + key);
+                    const avatarPath = savedAvatar ? `images/avatars/${savedAvatar}` : null;
+                    playerAvatars.push(avatarPath);
+                }
+
+                streaks = new Array(playerCount).fill(0);
+                skipCounts = new Array(playerCount).fill(0);
+                failStreak = new Array(playerCount).fill(0);
+                fiftyAvailable = new Array(playerCount).fill(false);
+                fiftyUsedAlready = new Array(playerCount).fill(false);
+                playerBonus = new Array(playerCount).fill(false);
+
+                console.log(parameters.players);
+
+                // startGame pričakuje: grade, category (array ID-jev), playerIds
+                game = await window.api.startGame(parameters.grade, parameters.category, playerIds);
+                gameData = game.questions || [];
+                boards = (game.players || []).map(p => p.board);
+
+                console.log(gameData);
+                shuffle(gameData);
+                console.log("Zmešano:", gameData);
+
+                limitIndex = gameData.length - 1;
+
+                renderBoards();
+                play();
+                startTimer();
+                updateSkipButton();
+            }
+
+            /* ---------- IZVEDBA ENEGA VPRAŠANJA ---------- */
+            function play() {
+                if (gameOver) return;
+                if (!gameData || gameData.length === 0) return;
+
+                resetAnswerButtons();
+                questionIndex++;
+                if (questionIndex > limitIndex) {
+                    questionIndex = 0;
+                }
+
+                const q = gameData[questionIndex];
+
+                if (q.image_path != null && q.image_path !== undefined) {
+                    questionImage.classList.remove("hidden");
+                    questionImage.src = "./images/" + q.image_path + ".png";
+                } else {
+                    questionImage.classList.add("hidden");
+                }
+
+                currentPlayer = questionIndex % playerCount;
+                document.getElementById("turn").innerText =
+                    playerNames[currentPlayer] + " je na vrsti";
+                highlightTurn(currentPlayer);
+
+                // avatar v headerju
+                if (currentAvatar) {
+                    const src = playerAvatars[currentPlayer];
+                    if (src) {
+                        currentAvatar.src = src;
+                        currentAvatar.classList.remove("hidden");
+                    } else {
+                        currentAvatar.classList.add("hidden");
+                    }
+                }
+
+                document.getElementById("question").innerText = q.text;
+                document.getElementById("0").innerText = q.options[0];
+                document.getElementById("1").innerText = q.options[1];
+                document.getElementById("2").innerText = q.options[2];
+                document.getElementById("3").innerText = q.options[3];
+
+                updateSkipButton();
+                startTimer();
+                updateFiftyButton();
+            }
+
+            /* ---------- ODGOVOR NA VPRAŠANJE ---------- */
+            async function selectedAnswer(event) {
+                const button = event.target;
+                if (gameOver) return;
+
+                const allBtns = document.getElementsByClassName("qButtons");
+                Array.from(allBtns).forEach(b => b.disabled = true);
+
+                const pIdx = questionIndex % playerCount;
+                console.log(pIdx, gameData[questionIndex].id, parseInt(button.id));
+
+                try {
+                    const result = await window.api.answer(
+                        pIdx,
+                        gameData[questionIndex].id,
+                        parseInt(button.id)
+                    );
+                    isCorrectAnswer = !!result?.correct;
+
+                    // subjectKey skušamo dobiti iz vprašanja, fallback statsSubject
+                    const q = gameData[questionIndex];
+                    const subjectKey =
+                        (q && (
+                            q.category_id ??      // če backend uporablja snake_case ID
+                            q.categoryId ??       // ali camelCase ID
+                            q.category ??
+                            q.category_name ??
+                            q.subject_name ??
+                            q.subject
+                        )) || statsSubject;
+
+                    // shranimo v statistiko
+                    updateStats(subjectKey, isCorrectAnswer);
+
+
+                    if (Array.isArray(result?.board)) {
+                        boards[pIdx] = result.board;
+                        updateBoard(pIdx);
+                    }
+
+                    if (isCorrectAnswer) {
+                        failStreak[pIdx] = 0;
+
+                        streaks[pIdx] = (streaks[pIdx] || 0) + 1;
+                        if (streaks[pIdx] === 3) {
+                            playerBonus[pIdx] = true;
+                            streaks[pIdx] = 0;
+                            showToast(playerNames[pIdx] + " je zaslužil BONUS +5s! 🎉", "success");
+                        }
+
+                        playCorrect();
+                        button.classList.add("bg-green-500", "text-white", "border-green-500");
+                    } else {
+                        streaks[pIdx] = 0;
+                        failStreak[pIdx]++;
+
+                        playerror();
+                        button.classList.add("bg-red-500", "text-white", "border-red-500");
+
+                        if (failStreak[pIdx] === 5) {
+                            failStreak[pIdx] = 0;
+                            if (!fiftyUsedAlready[pIdx]) {
+                                fiftyAvailable[pIdx] = true;
+                                fiftyUsedAlready[pIdx] = true;
+                                showToast(playerNames[pIdx] + " je dobil 50/50! 🎲", "success");
+                            }
+                        }
+                    }
+
+                    highlightTurn(pIdx);
+
+                    if (result?.bingo) {
+                        endGame(pIdx);
+                    }
+                } catch (e) {
+                    console.error('answer error', e);
+                    isCorrectAnswer = false;
+                    playerror();
+                }
+
+                setTimeout(function () {
+                    resetAnswerButtons();
+                    Array.from(allBtns).forEach(b => {
+                        b.classList.remove(
+                            "bg-green-500", "text-white", "border-green-500",
+                            "bg-red-500", "border-red-500",
+                            "border-blue-500", "bg-blue-50", "shadow-md", "selected"
+                        );
+                        b.classList.add("border-gray-200", "bg-white");
+                        b.style.animation = "";
+                        b.disabled = false;
+                    });
+
+                    if (!gameOver) play();
+                }, 700);
+            }
+
+            /* ---------- BOARDI ---------- */
+            function renderBoards() {
+                const container = document.getElementById('boards');
+                container.innerHTML = '';
+                const cols = Math.max(1, Math.min(playerNames.length, 4));
+                container.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+                playerNames.forEach((name, idx) => {
+                    const panel = document.createElement('div');
+                    panel.className = 'w-full max-w-[420px] p-4 rounded-2xl bg-white shadow-md transition-all';
+                    panel.setAttribute('data-player', idx.toString());
+                    panel.innerHTML = `
+          <div class="mb-3 flex flex-col">
+            <div class="flex items-center gap-2">
+              <img src="${playerAvatars[idx] || 'images/avatars/boy1.jpg'}"
+                   alt="Avatar"
+                   class="w-9 h-9 rounded-full border border-gray-300 shadow-sm" />
+              <h3 class="flex items-center gap-2 font-semibold text-gray-800">
+                <span class="w-3 h-3 rounded-full ${idx === 0 ? 'bg-blue-500' : 'bg-green-500'}"></span> ${name}
+              </h3>
+            </div>
+            <span class="turn-badge hidden px-2 py-1 mt-1 rounded-full bg-green-500 text-white text-xs font-semibold">Your Turn! ⚡</span>
+            <p class="streak-line hidden text-xs text-orange-500 font-semibold mt-1">🔥 Streak: ${streaks[idx] || 0}</p>
+          </div>
+          <div class="grid grid-cols-5 gap-2 board-grid"></div>`;
+                    container.appendChild(panel);
+                    drawBoardCells(panel.querySelector('.board-grid'), boards[idx] || createEmptyBoard());
+                });
+                highlightTurn(currentPlayer);
+            }
+
+            function createEmptyBoard() {
+                const b = Array.from({ length: 5 }, () => Array(5).fill(false));
+                b[2][2] = true; // free center
+                return b;
+            }
+
+            function drawBoardCells(gridEl, board) {
+                gridEl.innerHTML = '';
+                let n = 1;
+                for (let r = 0; r < 5; r++) {
+                    for (let c = 0; c < 5; c++) {
+                        const selected = board?.[r]?.[c];
+                        const isCenter = r === 2 && c === 2;
+                        const cell = document.createElement('div');
+                        cell.className = `aspect-square rounded-lg flex items-center justify-center ${selected ? (isCenter ? 'bg-yellow-400 text-white' : 'bg-blue-500 text-white shadow') : 'bg-white border-2 border-gray-200'}`;
+                        cell.textContent = isCenter ? '★' : String(n);
+                        gridEl.appendChild(cell);
+                        n++;
+                    }
+                }
+            }
+
+            function updateBoard(playerIdx) {
+                const grid = document.querySelector(`[data-player="${playerIdx}"] .board-grid`);
+                if (grid) drawBoardCells(grid, boards[playerIdx]);
+            }
+
+            function highlightTurn(playerIdx) {
+                document.querySelectorAll('#boards > div').forEach((panel, idx) => {
+                    const badge = panel.querySelector('.turn-badge');
+                    const streakLine = panel.querySelector('.streak-line');
+
+                    if (!gameOver && idx === playerIdx) {
+                        panel.classList.add('ring-4', 'ring-blue-500', 'scale-105');
+                        badge?.classList.remove('hidden');
+
+                        if (streakLine) {
+                            streakLine.textContent = "🔥 Streak: " + (streaks[idx] || 0);
+                            streakLine.classList.remove('hidden');
+                        }
+                    } else {
+                        panel.classList.remove('ring-4', 'ring-blue-500', 'scale-105');
+                        badge?.classList.add('hidden');
+                        if (streakLine) {
+                            streakLine.classList.add('hidden');
+                        }
+                    }
+                });
+            }
+
+            function disableAnswerButtons() {
+                Array.from(document.getElementsByClassName('qButtons')).forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-60', 'cursor-not-allowed');
+                });
+
+                if (skipBtn) {
+                    skipBtn.disabled = true;
+                    skipBtn.classList.add('opacity-60', 'cursor-not-allowed');
+                }
+            }
+            /* ---------- ACHIEVEMENTS SHRANJEVANJE ---------- */
+            const ACHIEVEMENTS_KEY = 'quizAchievements';
+
+            function getAchievementsStore() {
+                const raw = localStorage.getItem(ACHIEVEMENTS_KEY);
+                if (!raw) return {};
+                try {
+                    return JSON.parse(raw);
+                } catch {
+                    return {};
+                }
+            }
+
+            function setAchievementsStore(store) {
+                localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(store));
+            }
+
+            /* ---------- KONEC IGRE ---------- */
+            function endGame(winnerIdx) {
+                gameOver = true;
+                clearInterval(timerInterval);
+                disableAnswerButtons();
+                highlightTurn(-1);
+                // ➜ posredujemo tudi index zmagovalca
+                showWinnerModal(playerNames[winnerIdx], winnerIdx);
+                updateSkipButton();
+            }
+
+            function showWinnerModal(name, winnerIdx) {
+                const modal = document.getElementById('winnerModal');
+                const title = document.getElementById('winnerName');
+                const list = document.getElementById('winnerAchievements'); // UL v modalu
+
+                if (title) {
+                    title.textContent = name + ' je zmagal! 🏆';
+                }
+
+                // ---------- IZRAČUN DOSEŽKOV ZA ZMAGOVALCA ----------
+                const achievementsTexts = [];
+
+                // 🏅 Brez napak – vsaj 5 pravilnih zapored (lahko prilagodiš na 3, če želiš)
+                if ((streaks[winnerIdx] || 0) >= 5) {
+                    achievementsTexts.push('🏅 Brez napak – vsaj 5 pravilnih odgovorov zapored.');
+                }
+
+                // 💡 Brez jokerjev – brez preskokov in 50/50
+                if ((skipCounts[winnerIdx] || 0) === 0 && !fiftyUsedAlready[winnerIdx]) {
+                    achievementsTexts.push('💡 Brez jokerjev – brez preskokov in 50/50.');
+                }
+
+                // 🔥 Mirna roka – nikoli ni prišel do dolge serije napačnih (failStreak na koncu 0)
+                if ((failStreak[winnerIdx] || 0) === 0) {
+                    achievementsTexts.push('🔥 Mirna roka – brez dolge serije napačnih odgovorov.');
+                }
+
+                // --- prikažemo v modalu ---
+                if (list) {
+                    list.innerHTML = '';
+                    if (achievementsTexts.length === 0) {
+                        const li = document.createElement('li');
+                        li.textContent = 'Ni posebnih dosežkov, a zmaga je zmaga! 🎉';
+                        list.appendChild(li);
+                    } else {
+                        achievementsTexts.forEach(t => {
+                            const li = document.createElement('li');
+                            li.textContent = t;
+                            list.appendChild(li);
+                        });
+                    }
+                }
+
+                // --- shranimo dosežke za tega uporabnika v localStorage ---
+                const userId = playerIds[winnerIdx]; // imamo ga iz parameters.players
+                if (userId != null) {
+                    const store = getAchievementsStore();
+                    // shrani textualno listo; lahko bi tudi kode, ampak za nas je OK
+                    store[String(userId)] = achievementsTexts;
+                    setAchievementsStore(store);
+                }
+
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            }
+
+
+            /* ---------- TOAST ---------- */
+            function showToast(message, type = 'info') {
+                const toast = document.getElementById('toast');
+                const text = document.getElementById('toastMessage');
+                if (!toast || !text) return;
+                text.textContent = message;
+                toast.classList.remove('hidden');
+                toast.classList.remove('border-green-300', 'bg-green-50', 'border-rose-300', 'bg-rose-50');
+                if (type === 'success') {
+                    toast.classList.add('border-green-300', 'bg-green-50');
+                } else if (type === 'error') {
+                    toast.classList.add('border-rose-300', 'bg-rose-50');
+                }
+                if (toastTimer) clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 1850);
+            }
+
+            /* ---------- LISTENERJI ---------- */
+            const answerButtons = document.getElementsByClassName("qButtons");
+            for (let i = 0; i < answerButtons.length; i++) {
+                answerButtons[i].addEventListener('click', selectedAnswer, false);
+            }
+
+            if (skipBtn) {
+                skipBtn.addEventListener("click", skipQuestion);
+            }
+
+            if (fiftyBtn) {
+                fiftyBtn.addEventListener("click", function () {
+                    const pIdx = currentPlayer;
+                    if (!fiftyAvailable[pIdx]) return;
+
+                    const correctIndex = gameData[questionIndex].correct_answer;
+                    activateFiftyFifty(correctIndex);
+
+                    fiftyAvailable[pIdx] = false;
+                    updateFiftyButton();
+
+                    showToast("Uporabljen 50/50! 🎲", "success");
+                });
+            }
+
+            function startIntro() {
+                const overlay = document.getElementById('startOverlay');
+                const countdown = document.getElementById('countdown');
+
+                let value = 3;
+                countdown.textContent = value;
+
+                const interval = setInterval(() => {
+                    value--;
+                    if (value <= 0) {
+                        clearInterval(interval);
+
+                        // skrij overlay
+                        overlay.classList.add('hidden');
+
+                        // zdaj šele dejansko startamo igro
+                        enterData();
+                    } else {
+                        countdown.textContent = value;
+                    }
+                }, 1000);
+            }
+
+            window.onload = startIntro;
+
+        </script>
+        <!-- Winner Modal -->
+        <div id="winnerModal"
+            class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 w-[90%] max-w-md text-center space-y-4">
+                <h2 id="winnerName" class="text-2xl font-bold text-gray-800">Zmagovalec!</h2>
+                <p class="text-gray-600">Igra je končana. Čestitke!</p>
+                <div class="text-left text-sm text-gray-700 mt-2">
+                    <h3 class="font-semibold mb-1">Dosežki v tej igri:</h3>
+                    <ul id="winnerAchievements" class="list-disc list-inside space-y-1">
+                        <!-- JS bo tukaj dodal <li> elemente -->
+                    </ul>
+                </div>
+                <div class="flex gap-3 justify-center">
+                    <button onclick="window.location.href='index.html'"
+                        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Nova igra</button>
+                    <button onclick="document.getElementById('winnerModal').classList.add('hidden')"
+                        class="px-4 py-2 rounded-lg border hover:bg-gray-50">Zapri</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast"
+            class="hidden fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl border shadow-lg bg-white flex items-center gap-3">
+            <span id="toastMessage" class="text-sm text-gray-800">Message</span>
+            <button onclick="document.getElementById('toast').classList.add('hidden')"
+                class="text-gray-400 hover:text-gray-600">✖</button>
+        </div>
+        <!-- Start overlay -->
+        <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+            <div class="start-card rounded-2xl shadow-2xl px-8 py-6 text-center space-y-3">
+                <h2 class="text-2xl font-bold">
+                    Pripravljeni na igro? 🎯
+                </h2>
+                <p class="text-gray-500 dark:text-slate-300 text-sm">
+                    Igra se začne čez
+                </p>
+                <div id="countdown" class="text-5xl font-extrabold text-blue-600">
+                    3
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>

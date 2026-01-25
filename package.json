@@ -1,0 +1,28 @@
+{
+  "name": "bingo",
+  "version": "1.0.0",
+  "description": "First project for RUPS",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "test",
+    "start:bingo": "electron .",
+    "start:edufun:server": "node edufun/server.js",
+    "start:edufun:client": "npm --prefix edufun/client start",
+    "dev:all": "concurrently -n EDU-SRV,EDU-CLI,BINGO \"npm run start:edufun:server\" \"npm run start:edufun:client\" \"wait-on http://localhost:3000 && electron .\""
+  },
+  "author": "DigitalnaBrigada",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^38.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "concurrently": "^9.0.0",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.78.0",
+    "dotenv": "^17.2.3",
+    "update": "^0.7.4"
+  }
+}

@@ -1,0 +1,36 @@
+.button {
+    width: auto;
+    padding: 10px 20px;
+    background-color: rgb(181, 164, 131);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+.category-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    background: transparent;
+    margin: 5px;
+}
+
+.category-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3)
+}
+
+.container {
+    padding: 0;
+}
+
+.card-title {
+    color: #fff;
+    font-style: italic;
+}
+.h2{
+    color: #fff;
+}

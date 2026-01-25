@@ -1,0 +1,98 @@
+.create-quiz-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80%;
+    max-width: 700px;
+    max-height: 80vh;
+    margin: auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+}
+
+.create-quiz-title {
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.category-select-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.form-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #5c4b4b;
+    color: #f0e6d2;
+    font-size: 1.1rem;
+}
+
+.question-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.question-input,
+.option-input,
+.correct-answer-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(249, 245, 237);
+    color:#5c4b4b;
+    font-size: 1rem;
+}
+
+.animated-button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 25px;
+    background-color: rgb(215, 198, 168);
+    color: #000;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    animation: blink 1.5s infinite alternate;
+}
+
+.animated-button:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+}
+
+@keyframes blink {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.7;
+    }
+}
+
+.create-quiz-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.create-quiz-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.create-quiz-container::-webkit-scrollbar-thumb {
+    background-color: #5c4b4b;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+}

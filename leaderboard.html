@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Bingo — Lestvica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- DARK THEME STYLES FOR LEADERBOARD -->
+    <style>
+    /* Main dark background */
+    body.dark {
+        background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
+        color: #e5e7eb !important;
+    }
+
+    body.dark main {
+        background-color: #0f172a !important;
+        color: #e5e7eb !important;
+        border-color: #475569 !important;
+    }
+
+    /* Header + footer текст */
+    body.dark header,
+    body.dark footer,
+    body.dark h1,
+    body.dark h2,
+    body.dark h3,
+    body.dark p,
+    body.dark span {
+        color: #e5e7eb !important;
+    }
+
+    /* Triad табови */
+    body.dark .tab-button {
+        background-color: transparent !important;
+        color: #e5e7eb !important;
+        border: 1px solid #4b5563 !important;
+    }
+
+    body.dark .tab-button.bg-yellow-200 {
+        background-color: #1d4ed8 !important; /* активна тријада */
+        border-color: #2563eb !important;
+        color: #e5e7eb !important;
+    }
+
+    /* Subject filter копчиња */
+    body.dark .cat-button {
+        background-color: #020617 !important;
+        color: #e5e7eb !important;
+        border-color: #4b5563 !important;
+    }
+
+    body.dark .cat-button.bg-blue-600 {
+        background-color: #2563eb !important;
+        border-color: #2563eb !important;
+        color: #e5e7eb !important;
+    }
+
+    /* DARK MODE – Leaderboard rows */
+    body.dark #leaderboard-container > div {
+        background-color: #111827 !important;
+        border-color: #334155 !important;
+        color: #e5e7eb !important;
+        background-image: none !important;
+    }
+
+    body.dark #leaderboard-container span,
+    body.dark #leaderboard-container p {
+        color: #e5e7eb !important;
+    }
+
+    /* Override за Tailwind градиенти */
+    body.dark .from-yellow-50,
+    body.dark .from-slate-50,
+    body.dark .from-amber-50,
+    body.dark .to-amber-50,
+    body.dark .to-gray-100,
+    body.dark .to-orange-100 {
+        background: #111827 !important;
+        background-image: none !important;
+    }
+
+    /* Мени копче */
+    body.dark #backButton {
+        background-color: #2563eb !important;
+        border-color: #2563eb !important;
+        color: #e5e7eb !important;
+    }
+
+    body.dark #backButton:hover {
+        background-color: #1d4ed8 !important;
+    }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-yellow-100 via-pink-100 to-blue-100 p-8 flex items-center justify-center font-sans">
+<main class="max-w-3xl w-full bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-100 p-8 space-y-6">
+
+    <header class="text-center">
+        <div class="flex items-center justify-center gap-3 mb-3">
+            🏆 <h1 class="text-3xl font-bold text-gray-800">Lestvica</h1> 🏆
+        </div>
+        <p class="text-gray-500">Najboljši igralci po triadah in predmetih</p>
+    </header>
+
+    <!-- Triad Tabs -->
+    <div class="flex justify-center gap-2 border-b pb-3">
+        <button class="tab-button px-4 py-2 rounded-lg font-semibold text-gray-700 bg-yellow-200" data-triad="t1">1. triada</button>
+        <button class="tab-button px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-yellow-100" data-triad="t2">2. triada</button>
+        <button class="tab-button px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-yellow-100" data-triad="t3">3. triada</button>
+    </div>
+
+    <!-- Subject Filters -->
+    <div class="flex flex-wrap items-center justify-center gap-2 mt-4">
+        <span class="text-sm text-gray-500 mr-2">Predmeti:</span>
+        <button class="cat-button px-3 py-1 rounded-lg border bg-white" data-key="matematika">Matematika</button>
+        <button class="cat-button px-3 py-1 rounded-lg border bg-white" data-key="druzboslovje">Družboslovje</button>
+        <button class="cat-button px-3 py-1 rounded-lg border bg-white" data-key="naravoslovje">Naravoslovje</button>
+        <button class="cat-button px-3 py-1 rounded-lg border bg-white" data-key="anglescina">Angleščina</button>
+    </div>
+
+    <!-- Leaderboard List -->
+    <section id="leaderboard-container" class="space-y-3 mt-4 min-h-[200px]"></section>
+
+    <button id="backButton" class="w-full mt-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow">
+       Meni
+    </button>
+
+    <footer class="text-center pt-4 text-sm text-gray-500 border-t border-gray-200">
+        <span class="font-semibold">Digitalna Brigada</span>
+    </footer>
+</main>
+
+<script>
+    // -------- THEME INIT (dark/light from localStorage) --------
+    (function initTheme() {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.body.classList.toggle('dark', theme === 'dark');
+    })();
+
+    // UI elements
+    const container = document.getElementById("leaderboard-container");
+    const triadButtons = document.querySelectorAll(".tab-button");
+    const catButtons = document.querySelectorAll(".cat-button");
+
+    // State
+    let triads = { t1: [], t2: [], t3: [] }; // age_group IDs per triad
+    let categoriesByKey = {};                 // {key -> category id}
+    let selectedTriad = "t1";
+    let selectedCatId = null;
+
+    // Helpers
+    const norm = (s) =>
+        (s || "").toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+    function setBtnActive(btn, active) {
+        if (active) {
+            btn.classList.add("bg-blue-600", "text-white", "border-blue-600");
+            btn.classList.remove("bg-white");
+        } else {
+            btn.classList.remove("bg-blue-600", "text-white", "border-blue-600");
+            btn.classList.add("bg-white");
+        }
+    }
+
+    // -------- Load filters from backend (triads + categories) --------
+    async function initFilters() {
+        try {
+            const menu = await window.api.loadMenu();
+            const ageGroups = menu.ageGroups || [];
+            const categories = menu.categories || [];
+
+            // TRIADS – пофлексибилно препознавање
+            const t1 = [], t2 = [], t3 = [];
+            ageGroups.forEach((g) => {
+                const s = norm(g.age_group);
+                if (
+                    s.includes("1-3") || s.includes("1–3") ||
+                    s.includes("1 — 3") || s.includes("1 do 3") ||
+                    s.includes("1– 3") || s.includes("1 - 3")
+                ) {
+                    t1.push(g.id);
+                } else if (
+                    s.includes("4-6") || s.includes("4–6") ||
+                    s.includes("4 — 6") || s.includes("4 do 6") ||
+                    s.includes("4 - 6")
+                ) {
+                    t2.push(g.id);
+                } else if (
+                    s.includes("7-9") || s.includes("7–9") ||
+                    s.includes("7 — 9") || s.includes("7 do 9") ||
+                    s.includes("7 - 9")
+                ) {
+                    t3.push(g.id);
+                }
+            });
+
+            // fallback ако ознаките се чудни
+            if (!t1.length && !t2.length && !t3.length && ageGroups.length) {
+                const size = Math.ceil(ageGroups.length / 3);
+                t1.push(...ageGroups.slice(0, size).map(g => g.id));
+                t2.push(...ageGroups.slice(size, size * 2).map(g => g.id));
+                t3.push(...ageGroups.slice(size * 2).map(g => g.id));
+            }
+            triads = { t1, t2, t3 };
+
+            // CATEGORIES map -> key
+            const byKey = {};
+            categories.forEach((c) => {
+                const name = norm(c.name);
+                if (name.includes("matematika")) byKey.matematika = c.id;
+                else if (name.includes("druzboslovje")) byKey.druzboslovje = c.id;
+                else if (name.includes("naravoslovje")) byKey.naravoslovje = c.id;
+                else if (name.includes("anglescina") || name.includes("angleski") || name.includes("english"))
+                    byKey.anglescina = c.id;
+            });
+            categoriesByKey = byKey;
+
+            // default категорија
+            selectedCatId = byKey.matematika || Object.values(byKey)[0] || null;
+            catButtons.forEach((btn) => {
+                const id = byKey[btn.dataset.key];
+                setBtnActive(btn, id && id === selectedCatId);
+            });
+
+            await loadAndRender();
+        } catch (err) {
+            console.error("initFilters error", err);
+            container.innerHTML =
+                `<div class="p-4 rounded-lg bg-red-50 border border-red-200 text-red-700">
+                    Napaka pri nalaganju podatkov.
+                 </div>`;
+        }
+    }
+
+    // -------- Load leaderboard data --------
+    async function loadAndRender() {
+        container.innerHTML =
+            `<div class="text-center text-gray-500 py-10">Nalagam...</div>`;
+
+        const groupIds = triads[selectedTriad] || [];
+        const categoryIds = selectedCatId ? [selectedCatId] : [];
+
+        try {
+            const data = await window.api.leaderboard(groupIds, categoryIds);
+            renderList(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error("leaderboard error", err);
+            renderList([]);
+        }
+    }
+
+    // -------- Render list (со аватари) --------
+    function renderList(rows) {
+        container.innerHTML = "";
+
+        if (!rows.length) {
+            container.innerHTML =
+                `<div class="p-6 text-center text-gray-500 bg-white/60 rounded-xl border">
+                    Ni rezultatov za izbran predmet.
+                 </div>`;
+            return;
+        }
+
+        rows.forEach((row, i) => {
+            const fullName =
+                (row.User?.first_name || "") +
+                (row.User?.last_name ? " " + row.User.last_name : "") ||
+                `Uporabnik #${row.user_id}`;
+
+            // avatar from localStorage
+            const savedAvatar = localStorage.getItem("avatar_" + row.user_id);
+            const avatarPath = savedAvatar
+                ? `images/avatars/${savedAvatar}`
+                : `images/avatars/default.jpg`; // fallback ако нема
+
+            // стил по место
+            const style =
+                i === 0
+                    ? "bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-300"
+                    : i === 1
+                    ? "bg-gradient-to-r from-slate-50 to-gray-100 border-gray-300"
+                    : i === 2
+                    ? "bg-gradient-to-r from-amber-50 to-orange-100 border-amber-400"
+                    : "bg-white border-gray-200";
+
+            const div = document.createElement("div");
+            div.className = `flex items-center justify-between p-4 rounded-lg border-2 ${style}`;
+
+            div.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <span class="w-6 text-center font-semibold">${i + 1}</span>
+                    <img src="${avatarPath}" class="w-10 h-10 rounded-full border-2 border-purple-300">
+                    <span>${fullName}</span>
+                </div>
+                <p class="text-lg font-medium">${row.score} pts</p>
+            `;
+
+            container.appendChild(div);
+        });
+    }
+
+    // -------- Events --------
+    triadButtons.forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            triadButtons.forEach((b) => b.classList.remove("bg-yellow-200"));
+            btn.classList.add("bg-yellow-200");
+            selectedTriad = btn.dataset.triad;
+            await loadAndRender();
+        });
+    });
+
+    catButtons.forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            const key = btn.dataset.key;
+            const id = categoriesByKey[key];
+            if (!id) return;
+
+            selectedCatId = id;
+
+            catButtons.forEach((b) => {
+                const bid = categoriesByKey[b.dataset.key];
+                setBtnActive(b, bid && bid === selectedCatId);
+            });
+
+            await loadAndRender();
+        });
+    });
+
+    document.getElementById("backButton").addEventListener("click", () => {
+        window.location.href = "index.html";
+    });
+
+    // INIT
+    initFilters();
+</script>
+</body>
+</html>
