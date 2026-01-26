@@ -222,6 +222,23 @@
             background: #020617;
             color: #e5e7eb;
         }
+
+        #winnerModal > div {
+        max-height: 90vh;
+        overflow: hidden;
+        }
+
+        
+        #incorrectList {
+        max-height: 55vh;       
+        overflow-y: auto;
+        padding-right: 8px;     
+        }
+
+        /* (optional) малку простор меѓу елементите */
+        #incorrectList > div {
+        margin-bottom: 12px;
+        }
     </style>
 </head>
 
@@ -410,6 +427,7 @@
             const questionImage = document.getElementById("questionImage");
             let playerIds = [];
             let playerNames = [];
+            let incorrectByPlayer = []; // { [playerIdx]: [{text, selectedIndex, correctIndex, options}] }
             let playerAvatars = []; // poti do avatarjev
             let playerCount = 0;
             let boards = [];
@@ -625,7 +643,10 @@
 
                 playerCount = parameters.players.length;
                 playerIds = [];
+                incorrectByPlayer = Array.from({ length: playerCount }, () => []);
+
                 playerNames = [];
+                incorrectByPlayer = [];
                 playerAvatars = [];
 
                 for (let i = 0; i < playerCount; i++) {
@@ -722,13 +743,14 @@
                 Array.from(allBtns).forEach(b => b.disabled = true);
 
                 const pIdx = questionIndex % playerCount;
-                console.log(pIdx, gameData[questionIndex].id, parseInt(button.id));
+                const selectedIndex = parseInt(button.id);
+                console.log(pIdx, gameData[questionIndex].id, selectedIndex);
 
                 try {
                     const result = await window.api.answer(
                         pIdx,
                         gameData[questionIndex].id,
-                        parseInt(button.id)
+                        selectedIndex
                     );
                     isCorrectAnswer = !!result?.correct;
 
@@ -768,6 +790,20 @@
                     } else {
                         streaks[pIdx] = 0;
                         failStreak[pIdx]++;
+
+                        // Shrani netočno vprašanje za pregled po koncu igre
+                        try {
+                            const qReview = gameData[questionIndex];
+                            if (qReview) {
+                                incorrectByPlayer[pIdx] = incorrectByPlayer[pIdx] || [];
+                                incorrectByPlayer[pIdx].push({
+                                    text: qReview.text,
+                                    options: qReview.options,
+                                    selectedIndex,
+                                    correctIndex: qReview.correct_answer
+                                });
+                            }
+                        } catch (e) { }
 
                         playerror();
                         button.classList.add("bg-red-500", "text-white", "border-red-500");
@@ -972,6 +1008,63 @@
                     }
                 }
 
+                // ---------- PREGLED NETOČNIH VPRAŠANJ ----------
+                const incorrectSection = document.getElementById('incorrectSection');
+                const incorrectList = document.getElementById('incorrectList');
+
+                if (incorrectSection && incorrectList) {
+                    incorrectList.innerHTML = '';
+                    const playersWithMistakes = (incorrectByPlayer || []).filter(arr => Array.isArray(arr) && arr.length > 0).length;
+
+                    if (playersWithMistakes === 0) {
+                        incorrectSection.classList.add('hidden');
+                    } else {
+                        incorrectSection.classList.remove('hidden');
+
+                        (incorrectByPlayer || []).forEach((mistakes, pIdx) => {
+                            if (!Array.isArray(mistakes) || mistakes.length === 0) return;
+
+                            const wrap = document.createElement('div');
+                            wrap.className = 'p-3 rounded-xl border bg-gray-50 break-words';
+
+                            const h = document.createElement('div');
+                            h.className = 'font-semibold mb-2';
+                            h.textContent = (playerNames[pIdx] || ('Igralec ' + (pIdx + 1))) + ':';
+                            wrap.appendChild(h);
+
+                            mistakes.forEach((m, i) => {
+                                const qText = m && m.text ? m.text : '';
+                                const opts = Array.isArray(m && m.options) ? m.options : [];
+                                const correctText = (typeof m.correctIndex === 'number' && opts[m.correctIndex] != null) ? opts[m.correctIndex] : '(neznano)';
+                                const selectedText = (typeof m.selectedIndex === 'number' && opts[m.selectedIndex] != null) ? opts[m.selectedIndex] : '(brez izbire)';
+
+                                const row = document.createElement('div');
+                                row.className = 'mb-2 last:mb-0';
+
+                                const qLine = document.createElement('div');
+                                qLine.className = 'font-medium';
+                                qLine.textContent = `Q${i + 1}: ${qText}`;
+                                row.appendChild(qLine);
+
+                                const sLine = document.createElement('div');
+                                sLine.className = 'text-xs text-red-600';
+                                sLine.textContent = `Tvoj odgovor: ${selectedText} ❌`;
+                                row.appendChild(sLine);
+
+                                const cLine = document.createElement('div');
+                                cLine.className = 'text-xs text-green-700';
+                                cLine.textContent = `Pravi odgovor: ${correctText} ✅`;
+                                row.appendChild(cLine);
+
+                                wrap.appendChild(row);
+                            });
+
+                            incorrectList.appendChild(wrap);
+                        });
+                    }
+                }
+
+
                 // --- shranimo dosežke za tega uporabnika v localStorage ---
                 const userId = playerIds[winnerIdx]; // imamo ga iz parameters.players
                 if (userId != null) {
@@ -1060,7 +1153,7 @@
         <!-- Winner Modal -->
         <div id="winnerModal"
             class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-            <div class="bg-white rounded-2xl shadow-2xl p-8 w-[90%] max-w-md text-center space-y-4">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 w-[90%] max-w-md text-center flex flex-col max-h-[90vh]">
                 <h2 id="winnerName" class="text-2xl font-bold text-gray-800">Zmagovalec!</h2>
                 <p class="text-gray-600">Igra je končana. Čestitke!</p>
                 <div class="text-left text-sm text-gray-700 mt-2">
@@ -1069,6 +1162,12 @@
                         <!-- JS bo tukaj dodal <li> elemente -->
                     </ul>
                 </div>
+
+            <div id="incorrectSection" class="text-left text-sm text-gray-700 mt-4 hidden">
+                <h3 class="font-semibold mb-2">Napačno odgovorjena vprašanja:</h3>
+                <div id="incorrectList" class="space-y-3"></div>
+            </div>
+
                 <div class="flex gap-3 justify-center">
                     <button onclick="window.location.href='index.html'"
                         class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Nova igra</button>
