@@ -225,12 +225,12 @@
 
         #winnerModal > div {
         max-height: 90vh;
-        overflow: hidden;
+        max-height: 90vh;
         }
 
         
         #incorrectList {
-        max-height: 55vh;       
+        max-height: 45vh;       
         overflow-y: auto;
         padding-right: 8px;     
         }
@@ -646,7 +646,6 @@
                 incorrectByPlayer = Array.from({ length: playerCount }, () => []);
 
                 playerNames = [];
-                incorrectByPlayer = [];
                 playerAvatars = [];
 
                 for (let i = 0; i < playerCount; i++) {
@@ -962,10 +961,55 @@
                 highlightTurn(-1);
                 // ➜ posredujemo tudi index zmagovalca
                 showWinnerModal(playerNames[winnerIdx], winnerIdx);
+                // 🎯 Preveri cilj
+                const goal = Number(localStorage.getItem('quizGoal'));
+                if (goal && typeof limitIndex === 'number') {
+                const totalQ = limitIndex + 1;
+                const wrong = incorrectByPlayer.flat().length;
+                const percent = Math.round(((totalQ - wrong) / totalQ) * 100);
+
+                if (percent >= goal) {
+                    showToast("🎉 Cilj dosežen!", "success");
+                } else {
+                    showToast(`❌ Manjkalo ti je še ${goal - percent}%`, "error");
+                }
+                }
                 updateSkipButton();
             }
 
             function showWinnerModal(name, winnerIdx) {
+                 const totalQ = limitIndex + 1;
+                const wrong = incorrectByPlayer.flat().length;
+                const percent = Math.round(((totalQ - wrong) / totalQ) * 100);
+
+                const goal = Number(localStorage.getItem('quizGoal')) || 0;
+
+                const percentEl = document.getElementById("finalPercentText");
+                if (percentEl) {
+                    percentEl.textContent = `📊 Uspešnost: ${percent}%`;
+
+                    if (!goal) {
+                    percentEl.className = "font-semibold text-lg mt-2 text-slate-700";
+                    } else {
+                    percentEl.className = percent >= goal
+                        ? "font-semibold text-lg mt-2 text-green-600"
+                        : "font-semibold text-lg mt-2 text-red-600";
+                    }
+                }
+
+                const goalEl = document.getElementById("goalResultText");
+                if (goalEl) {
+                    if (!goal) {
+                    goalEl.textContent = "🎯 Cilj ni izbran.";
+                    goalEl.className = "text-sm mt-1 text-slate-500";
+                    } else if (percent >= goal) {
+                    goalEl.textContent = `🎉 Cilj dosežen! (${goal}%)`;
+                    goalEl.className = "text-sm mt-1 text-green-600 font-semibold";
+                    } else {
+                    goalEl.textContent = `❌ Manjkalo ti je še ${goal - percent}% do cilja (${goal}%).`;
+                    goalEl.className = "text-sm mt-1 text-red-600 font-semibold";
+                    }
+                }
                 const modal = document.getElementById('winnerModal');
                 const title = document.getElementById('winnerName');
                 const list = document.getElementById('winnerAchievements'); // UL v modalu
@@ -1127,7 +1171,19 @@
             function startIntro() {
                 const overlay = document.getElementById('startOverlay');
                 const countdown = document.getElementById('countdown');
+                
+                if (!localStorage.getItem('quizGoal')) {
+                localStorage.setItem('quizGoal', '80');
+                const g80 = document.querySelector('input[name="goal"][value="80"]');
+                if (g80) g80.checked = true;
+                }
 
+                // 🎯 кога ќе избере, зачувај во localStorage
+                document.querySelectorAll('input[name="goal"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    localStorage.setItem('quizGoal', e.target.value);
+                });
+                });
                 let value = 3;
                 countdown.textContent = value;
 
@@ -1148,7 +1204,6 @@
             }
 
             window.onload = startIntro;
-
         </script>
         <!-- Winner Modal -->
         <div id="winnerModal"
@@ -1156,6 +1211,8 @@
             <div class="bg-white rounded-2xl shadow-2xl p-8 w-[90%] max-w-md text-center flex flex-col max-h-[90vh]">
                 <h2 id="winnerName" class="text-2xl font-bold text-gray-800">Zmagovalec!</h2>
                 <p class="text-gray-600">Igra je končana. Čestitke!</p>
+                <p id="finalPercentText" class="font-semibold text-lg mt-2"></p>
+                <p id="goalResultText" class="text-sm mt-1"></p>
                 <div class="text-left text-sm text-gray-700 mt-2">
                     <h3 class="font-semibold mb-1">Dosežki v tej igri:</h3>
                     <ul id="winnerAchievements" class="list-disc list-inside space-y-1">
@@ -1167,12 +1224,15 @@
                 <h3 class="font-semibold mb-2">Napačno odgovorjena vprašanja:</h3>
                 <div id="incorrectList" class="space-y-3"></div>
             </div>
-
-                <div class="flex gap-3 justify-center">
-                    <button onclick="window.location.href='index.html'"
-                        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Nova igra</button>
-                    <button onclick="document.getElementById('winnerModal').classList.add('hidden')"
-                        class="px-4 py-2 rounded-lg border hover:bg-gray-50">Zapri</button>
+                <div class="mt-auto pt-4 flex gap-3 justify-center border-t border-slate-200 bg-white/80 sticky bottom-0">
+                <button onclick="window.location.href='index.html'"
+                    class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                    Nova igra
+                </button>
+                <button onclick="document.getElementById('winnerModal').classList.add('hidden')"
+                    class="px-4 py-2 rounded-lg border hover:bg-gray-50">
+                    Zapri
+                </button>
                 </div>
             </div>
         </div>
@@ -1195,6 +1255,26 @@
                 </p>
                 <div id="countdown" class="text-5xl font-extrabold text-blue-600">
                     3
+                </div>
+                <!-- 🎯 Izbira cilja -->
+                <div class="mt-4 text-sm text-center">
+                <p class="font-semibold mb-2">🎯 Izberi cilj za to igro</p>
+
+                <div class="flex justify-center gap-4">
+                    <label class="flex items-center gap-1 cursor-pointer">
+                    <input type="radio" name="goal" value="60">
+                    <span>60%</span>
+                    </label>
+
+                    <label class="flex items-center gap-1 cursor-pointer">
+                    <input type="radio" name="goal" value="80">
+                    <span>80%</span>
+                    </label>
+
+                    <label class="flex items-center gap-1 cursor-pointer">
+                    <input type="radio" name="goal" value="90">
+                    <span>90%</span>
+                    </label>
                 </div>
             </div>
         </div>
