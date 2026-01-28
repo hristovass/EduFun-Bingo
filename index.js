@@ -1,6 +1,7 @@
 require('dotenv').config();
 const {app, BrowserWindow, ipcMain} = require('electron/main');
 const path = require('node:path');
+const fs = require('node:fs');
 
 // supabase
 const {createClient} = require("@supabase/supabase-js");
@@ -61,6 +62,51 @@ ipcMain.handle('get-age-groups', async () => {
     if (error) return {error: error.message};
     return data;
 });
+
+// ✅ LOCAL LESSONS (assets/lessons.json)
+ipcMain.handle('get-local-lessons', async () => {
+    try {
+        const p = path.join(__dirname, 'assets', 'lessons.json');
+        const raw = fs.readFileSync(p, 'utf-8');
+        const lessons = JSON.parse(raw);
+
+        // preberi kategorije iz baze
+        const { data: categories, error } = await supabase
+            .from('Category')
+            .select('id, name');
+
+        if (error) throw error;
+
+        // helper za normalizacijo (enako kot v game.html)
+        const normalizeKey = (x) => String(x)
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, ' ')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+
+        // avtomatsko zgradi lessonsById iz lessonsByName + Category tabela
+        const byId = { ...(lessons.lessonsById || {}) };
+        const byName = lessons.lessonsByName || {};
+
+        for (const c of categories) {
+            const key = normalizeKey(c.name);
+            if (byName[key] && !byId[String(c.id)]) {
+                byId[String(c.id)] = byName[key];
+            }
+        }
+
+        return {
+            ...lessons,
+            lessonsById: byId
+        };
+
+    } catch (e) {
+        console.error("get-local-lessons error:", e);
+        return { error: e.message };
+    }
+});
+
 
 ipcMain.on('open-add-player', () => {
     createAddPlayerWindow();

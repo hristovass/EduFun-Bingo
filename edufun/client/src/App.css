@@ -15,12 +15,12 @@ body {
 body.light {
   background-color: #ffffff;
   color: #000000;
-  background-image: url("D:\Desktop\quizz-app\client\public\images\wallpaper4.webp");
+  background-image: url("C:\Users\Lenovo\Desktop\EduFun-Bingo\edufun\client\public\images\wallpaper4.webp");
 }
 body.dark {
   background-color: #121212;
   color: #ffffff;
-  background-image: url("D:\Desktop\quizz-app\client\public\images\wallpaper3.png");
+  background-image: url("C:\Users\Lenovo\Desktop\EduFun-Bingo\edufun\client\public\images\wallpaper3.png");
 }
 
 .App {

@@ -116,7 +116,7 @@
       const theme = localStorage.getItem('theme') || 'light';
       document.body.classList.toggle('dark', theme === 'dark');
 
-      // 🔹 mapa: ID kategorije -> ime predmeta (Angleščina, Matematika, ...)
+      // 🔹 mapa: ID kategorije -> ime predmeta (Programiranje, Matematika, ...)
       const categoriesById = {};
       if (window.api?.loadMenu) {
         try {

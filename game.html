@@ -223,21 +223,21 @@
             color: #e5e7eb;
         }
 
-        #winnerModal > div {
-        max-height: 90vh;
-        max-height: 90vh;
+        #winnerModal>div {
+            max-height: 90vh;
+            max-height: 90vh;
         }
 
-        
+
         #incorrectList {
-        max-height: 45vh;       
-        overflow-y: auto;
-        padding-right: 8px;     
+            max-height: 45vh;
+            overflow-y: auto;
+            padding-right: 8px;
         }
 
         /* (optional) малку простор меѓу елементите */
-        #incorrectList > div {
-        margin-bottom: 12px;
+        #incorrectList>div {
+            margin-bottom: 12px;
         }
     </style>
 </head>
@@ -519,31 +519,31 @@
             }
 
             function activateFiftyFifty(correctIndex) {
-    const buttons = [...document.getElementsByClassName("qButtons")];
+                const buttons = [...document.getElementsByClassName("qButtons")];
 
-    // Vedno spremeni correctIndex v ŠTEVILKO
-    const correct = Number(correctIndex);
+                // Vedno spremeni correctIndex v ŠTEVILKO
+                const correct = Number(correctIndex);
 
-    const correctBtn = buttons.find(btn => Number(btn.id) === correct);
+                const correctBtn = buttons.find(btn => Number(btn.id) === correct);
 
-    // Filtriraj napačne gumbe
-    let wrongButtons = buttons.filter(btn => Number(btn.id) !== correct);
+                // Filtriraj napačne gumbe
+                let wrongButtons = buttons.filter(btn => Number(btn.id) !== correct);
 
-    // Izberi dva napačna gumba za skritje
-    let toHide = wrongButtons.sort(() => 0.5 - Math.random()).slice(0, 2);
+                // Izberi dva napačna gumba za skritje
+                let toHide = wrongButtons.sort(() => 0.5 - Math.random()).slice(0, 2);
 
-    // Skrij samo napačne
-    toHide.forEach(btn => {
-        btn.disabled = true;
-        btn.classList.add("opacity-30");
-    });
+                // Skrij samo napačne
+                toHide.forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.add("opacity-30");
+                });
 
-    // 🔒 PRAVILNI GUMB SE NIKOLI NE SME SKRITI
-    if (correctBtn) {
-        correctBtn.disabled = false;
-        correctBtn.classList.remove("opacity-30");
-    }
-}
+                // 🔒 PRAVILNI GUMB SE NIKOLI NE SME SKRITI
+                if (correctBtn) {
+                    correctBtn.disabled = false;
+                    correctBtn.classList.remove("opacity-30");
+                }
+            }
 
 
             /* ---------- TIMER ---------- */
@@ -964,21 +964,21 @@
                 // 🎯 Preveri cilj
                 const goal = Number(localStorage.getItem('quizGoal'));
                 if (goal && typeof limitIndex === 'number') {
-                const totalQ = limitIndex + 1;
-                const wrong = incorrectByPlayer.flat().length;
-                const percent = Math.round(((totalQ - wrong) / totalQ) * 100);
+                    const totalQ = limitIndex + 1;
+                    const wrong = incorrectByPlayer.flat().length;
+                    const percent = Math.round(((totalQ - wrong) / totalQ) * 100);
 
-                if (percent >= goal) {
-                    showToast("🎉 Cilj dosežen!", "success");
-                } else {
-                    showToast(`❌ Manjkalo ti je še ${goal - percent}%`, "error");
-                }
+                    if (percent >= goal) {
+                        showToast("🎉 Cilj dosežen!", "success");
+                    } else {
+                        showToast(`❌ Manjkalo ti je še ${goal - percent}%`, "error");
+                    }
                 }
                 updateSkipButton();
             }
 
             function showWinnerModal(name, winnerIdx) {
-                 const totalQ = limitIndex + 1;
+                const totalQ = limitIndex + 1;
                 const wrong = incorrectByPlayer.flat().length;
                 const percent = Math.round(((totalQ - wrong) / totalQ) * 100);
 
@@ -989,25 +989,25 @@
                     percentEl.textContent = `📊 Uspešnost: ${percent}%`;
 
                     if (!goal) {
-                    percentEl.className = "font-semibold text-lg mt-2 text-slate-700";
+                        percentEl.className = "font-semibold text-lg mt-2 text-slate-700";
                     } else {
-                    percentEl.className = percent >= goal
-                        ? "font-semibold text-lg mt-2 text-green-600"
-                        : "font-semibold text-lg mt-2 text-red-600";
+                        percentEl.className = percent >= goal
+                            ? "font-semibold text-lg mt-2 text-green-600"
+                            : "font-semibold text-lg mt-2 text-red-600";
                     }
                 }
 
                 const goalEl = document.getElementById("goalResultText");
                 if (goalEl) {
                     if (!goal) {
-                    goalEl.textContent = "🎯 Cilj ni izbran.";
-                    goalEl.className = "text-sm mt-1 text-slate-500";
+                        goalEl.textContent = "🎯 Cilj ni izbran.";
+                        goalEl.className = "text-sm mt-1 text-slate-500";
                     } else if (percent >= goal) {
-                    goalEl.textContent = `🎉 Cilj dosežen! (${goal}%)`;
-                    goalEl.className = "text-sm mt-1 text-green-600 font-semibold";
+                        goalEl.textContent = `🎉 Cilj dosežen! (${goal}%)`;
+                        goalEl.className = "text-sm mt-1 text-green-600 font-semibold";
                     } else {
-                    goalEl.textContent = `❌ Manjkalo ti je še ${goal - percent}% do cilja (${goal}%).`;
-                    goalEl.className = "text-sm mt-1 text-red-600 font-semibold";
+                        goalEl.textContent = `❌ Manjkalo ti je še ${goal - percent}% do cilja (${goal}%).`;
+                        goalEl.className = "text-sm mt-1 text-red-600 font-semibold";
                     }
                 }
                 const modal = document.getElementById('winnerModal');
@@ -1168,22 +1168,33 @@
                 });
             }
 
+            // --- GOAL: radio gumbi (znotraj lessonOverlay) ---
+            function initGoalRadios() {
+                // default
+                if (!localStorage.getItem('quizGoal')) {
+                    localStorage.setItem('quizGoal', '80');
+                }
+
+                // označi radio v UI (če obstaja)
+                const current = localStorage.getItem('quizGoal');
+                const r = document.querySelector(`input[name="goal"][value="${current}"]`);
+                if (r) r.checked = true;
+
+                // poslušaj spremembe
+                document.querySelectorAll('input[name="goal"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        localStorage.setItem('quizGoal', e.target.value);
+                    });
+                });
+            }
+
+            // --- TIMER overlay ---
             function startIntro() {
                 const overlay = document.getElementById('startOverlay');
                 const countdown = document.getElementById('countdown');
-                
-                if (!localStorage.getItem('quizGoal')) {
-                localStorage.setItem('quizGoal', '80');
-                const g80 = document.querySelector('input[name="goal"][value="80"]');
-                if (g80) g80.checked = true;
-                }
 
-                // 🎯 кога ќе избере, зачувај во localStorage
-                document.querySelectorAll('input[name="goal"]').forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    localStorage.setItem('quizGoal', e.target.value);
-                });
-                });
+                overlay.classList.remove('hidden'); // pokaži timer overlay
+
                 let value = 3;
                 countdown.textContent = value;
 
@@ -1191,19 +1202,130 @@
                     value--;
                     if (value <= 0) {
                         clearInterval(interval);
-
-                        // skrij overlay
-                        overlay.classList.add('hidden');
-
-                        // zdaj šele dejansko startamo igro
-                        enterData();
+                        overlay.classList.add('hidden'); // skrij overlay
+                        enterData(); // start game
                     } else {
                         countdown.textContent = value;
                     }
                 }, 1000);
             }
 
-            window.onload = startIntro;
+            // --- LESSON helpers ---
+            function normalizeKey(x) {
+                return String(x).trim().toLowerCase().replace(/\s+/g, ' ')
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            }
+
+            function escapeHtml(str) {
+                return String(str)
+                    .replaceAll("&", "&amp;")
+                    .replaceAll("<", "&lt;")
+                    .replaceAll(">", "&gt;")
+                    .replaceAll('"', "&quot;");
+            }
+
+            function resolveLesson(lessonsJson, cat) {
+                if (!lessonsJson || lessonsJson.error) return null;
+
+                // 1) ID match (če je cat number id)
+                const idKey = String(cat);
+                if (lessonsJson.lessonsById && lessonsJson.lessonsById[idKey]) {
+                    return lessonsJson.lessonsById[idKey];
+                }
+
+                // 2) Name match (fallback)
+                const nameKey = normalizeKey(cat);
+                if (lessonsJson.lessonsByName) {
+                    if (lessonsJson.lessonsByName[nameKey]) return lessonsJson.lessonsByName[nameKey];
+                    const keys = Object.keys(lessonsJson.lessonsByName);
+                    const found = keys.find(k => normalizeKey(k) === nameKey);
+                    if (found) return lessonsJson.lessonsByName[found];
+                }
+
+                return null;
+            }
+
+            // --- SHOW lesson overlay THEN timer ---
+            async function showLessonThenIntro() {
+                try {
+                    const lessonOverlay = document.getElementById('lessonOverlay');
+                    if (!lessonOverlay) {
+                        startIntro();
+                        return;
+                    }
+
+                    // goal radioji so v lessonOverlay -> init ko smo ziher da overlay obstaja
+                    initGoalRadios();
+
+                    const params = JSON.parse(localStorage.getItem('parameters') || 'null');
+                    if (!params || !Array.isArray(params.category) || params.category.length === 0) {
+                        startIntro();
+                        return;
+                    }
+
+                    if (!window.api || !window.api.getLocalLessons) {
+                        startIntro();
+                        return;
+                    }
+
+                    const lessonsJson = await window.api.getLocalLessons();
+                    if (lessonsJson?.error) {
+                        startIntro();
+                        return;
+                    }
+
+                    const body = document.getElementById('lessonBody');
+                    body.innerHTML = "";
+
+                    for (const cat of params.category) {
+                        const lesson = resolveLesson(lessonsJson, cat);
+
+                        const section = document.createElement('div');
+                        section.className = "p-4 rounded-xl border bg-white";
+
+                        if (!lesson) {
+                            section.innerHTML = `
+          <h3 class="text-lg font-semibold text-gray-800">Predmet: ${escapeHtml(cat)}</h3>
+          <p class="text-sm text-gray-600 mt-2">Mini predavanje še ni dodano za to kategorijo.</p>
+        `;
+                        } else {
+                            const pts = Array.isArray(lesson.points) ? lesson.points : [];
+                            section.innerHTML = `
+          <h3 class="text-lg font-semibold text-gray-800">${escapeHtml(lesson.title || String(cat))}</h3>
+          <p class="text-xs text-gray-500 mt-1">Čas branja: ~${lesson.minutes ?? 2} min</p>
+          <div class="text-sm text-gray-700 mt-3 whitespace-pre-line">${escapeHtml(lesson.content || "")}</div>
+          ${pts.length ? `
+            <ul class="list-disc list-inside text-sm text-gray-700 mt-3 space-y-1">
+              ${pts.map(p => `<li>${escapeHtml(p)}</li>`).join("")}
+            </ul>
+          ` : ""}
+        `;
+                        }
+
+                        body.appendChild(section);
+                    }
+
+                    // pokaži lesson overlay
+                    lessonOverlay.classList.remove('hidden');
+
+                    const go = () => {
+                        lessonOverlay.classList.add('hidden');
+                        startIntro();
+                    };
+
+                    document.getElementById('lessonContinue').onclick = go;
+                    document.getElementById('lessonSkip').onclick = go;
+
+                } catch (e) {
+                    console.error("showLessonThenIntro crashed:", e);
+                    startIntro();
+                }
+            }
+
+            // ✅ NE uporabljaj window.onload = startIntro; (ker bi preskočil lesson)
+            // ✅ Naj se vedno začne z lesson (če obstaja), potem timer
+            window.addEventListener('load', showLessonThenIntro);
+
         </script>
         <!-- Winner Modal -->
         <div id="winnerModal"
@@ -1220,19 +1342,20 @@
                     </ul>
                 </div>
 
-            <div id="incorrectSection" class="text-left text-sm text-gray-700 mt-4 hidden">
-                <h3 class="font-semibold mb-2">Napačno odgovorjena vprašanja:</h3>
-                <div id="incorrectList" class="space-y-3"></div>
-            </div>
-                <div class="mt-auto pt-4 flex gap-3 justify-center border-t border-slate-200 bg-white/80 sticky bottom-0">
-                <button onclick="window.location.href='index.html'"
-                    class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
-                    Nova igra
-                </button>
-                <button onclick="document.getElementById('winnerModal').classList.add('hidden')"
-                    class="px-4 py-2 rounded-lg border hover:bg-gray-50">
-                    Zapri
-                </button>
+                <div id="incorrectSection" class="text-left text-sm text-gray-700 mt-4 hidden">
+                    <h3 class="font-semibold mb-2">Napačno odgovorjena vprašanja:</h3>
+                    <div id="incorrectList" class="space-y-3"></div>
+                </div>
+                <div
+                    class="mt-auto pt-4 flex gap-3 justify-center border-t border-slate-200 bg-white/80 sticky bottom-0">
+                    <button onclick="window.location.href='index.html'"
+                        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                        Nova igra
+                    </button>
+                    <button onclick="document.getElementById('winnerModal').classList.add('hidden')"
+                        class="px-4 py-2 rounded-lg border hover:bg-gray-50">
+                        Zapri
+                    </button>
                 </div>
             </div>
         </div>
@@ -1244,40 +1367,61 @@
             <button onclick="document.getElementById('toast').classList.add('hidden')"
                 class="text-gray-400 hover:text-gray-600">✖</button>
         </div>
-        <!-- Start overlay -->
-        <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-            <div class="start-card rounded-2xl shadow-2xl px-8 py-6 text-center space-y-3">
-                <h2 class="text-2xl font-bold">
-                    Pripravljeni na igro? 🎯
-                </h2>
-                <p class="text-gray-500 dark:text-slate-300 text-sm">
-                    Igra se začne čez
-                </p>
-                <div id="countdown" class="text-5xl font-extrabold text-blue-600">
-                    3
+
+        <!-- ✅ Lesson overlay (BEFORE timer) -->
+        <div id="lessonOverlay"
+            class="hidden fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-sm bg-black/10">
+            <div class="bg-white/90 rounded-2xl shadow-2xl p-6 w-[92%] max-w-2xl space-y-4">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h2 id="lessonTitle" class="text-2xl font-bold text-gray-800">Mini predavanje</h2>
+                        <p id="lessonSubtitle" class="text-sm text-gray-500 mt-1">Preden začneš, na hitro ponovi snov.
+                        </p>
+                    </div>
+                    <button id="lessonSkip" class="text-sm px-3 py-1 rounded-lg border hover:bg-gray-50">
+                        Preskoči
+                    </button>
+                </div>
+
+                <div id="lessonBody" class="space-y-4 max-h-[55vh] overflow-auto pr-1"></div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button id="lessonContinue" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                        Nadaljuj na igro ▶️
+                    </button>
                 </div>
                 <!-- 🎯 Izbira cilja -->
                 <div class="mt-4 text-sm text-center">
-                <p class="font-semibold mb-2">🎯 Izberi cilj za to igro</p>
+                    <p class="font-semibold mb-2">🎯 Izberi cilj za to igro</p>
 
-                <div class="flex justify-center gap-4">
-                    <label class="flex items-center gap-1 cursor-pointer">
-                    <input type="radio" name="goal" value="60">
-                    <span>60%</span>
-                    </label>
+                    <div class="flex justify-center gap-4">
+                        <label class="flex items-center gap-1 cursor-pointer">
+                            <input type="radio" name="goal" value="60">
+                            <span>60%</span>
+                        </label>
 
-                    <label class="flex items-center gap-1 cursor-pointer">
-                    <input type="radio" name="goal" value="80">
-                    <span>80%</span>
-                    </label>
+                        <label class="flex items-center gap-1 cursor-pointer">
+                            <input type="radio" name="goal" value="80">
+                            <span>80%</span>
+                        </label>
 
-                    <label class="flex items-center gap-1 cursor-pointer">
-                    <input type="radio" name="goal" value="90">
-                    <span>90%</span>
-                    </label>
+                        <label class="flex items-center gap-1 cursor-pointer">
+                            <input type="radio" name="goal" value="90">
+                            <span>90%</span>
+                        </label>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Start overlay (timer) -->
+            <div id="startOverlay" class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+                <div class="start-card rounded-2xl shadow-2xl px-8 py-6 text-center space-y-3">
+                    <h2 class="text-2xl font-bold">Pripravljeni na igro? 🎯</h2>
+                    <p class="text-gray-500 dark:text-slate-300 text-sm">Igra se začne čez</p>
+                    <div id="countdown" class="text-5xl font-extrabold text-blue-600">3</div>
+                </div>
+            </div>
+
     </main>
 
 </body>
