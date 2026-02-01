@@ -1370,57 +1370,66 @@
 
         <!-- ✅ Lesson overlay (BEFORE timer) -->
         <div id="lessonOverlay"
-            class="hidden fixed inset-0 z-[60] flex items-center justify-center backdrop-blur-sm bg-black/10">
-            <div class="bg-white/90 rounded-2xl shadow-2xl p-6 w-[92%] max-w-2xl space-y-4">
-                <div class="flex items-start justify-between gap-4">
-                    <div>
-                        <h2 id="lessonTitle" class="text-2xl font-bold text-gray-800">Mini predavanje</h2>
-                        <p id="lessonSubtitle" class="text-sm text-gray-500 mt-1">Preden začneš, na hitro ponovi snov.
-                        </p>
-                    </div>
-                    <button id="lessonSkip" class="text-sm px-3 py-1 rounded-lg border hover:bg-gray-50">
-                        Preskoči
-                    </button>
-                </div>
+        class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/40">
 
-                <div id="lessonBody" class="space-y-4 max-h-[55vh] overflow-auto pr-1"></div>
-
-                <div class="flex justify-end gap-2 pt-2">
-                    <button id="lessonContinue" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
-                        Nadaljuj na igro ▶️
-                    </button>
-                </div>
-                <!-- 🎯 Izbira cilja -->
-                <div class="mt-4 text-sm text-center">
-                    <p class="font-semibold mb-2">🎯 Izberi cilj za to igro</p>
-
-                    <div class="flex justify-center gap-4">
-                        <label class="flex items-center gap-1 cursor-pointer">
-                            <input type="radio" name="goal" value="60">
-                            <span>60%</span>
-                        </label>
-
-                        <label class="flex items-center gap-1 cursor-pointer">
-                            <input type="radio" name="goal" value="80">
-                            <span>80%</span>
-                        </label>
-
-                        <label class="flex items-center gap-1 cursor-pointer">
-                            <input type="radio" name="goal" value="90">
-                            <span>90%</span>
-                        </label>
-                    </div>
-                </div>
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-[92%] max-w-2xl space-y-4 text-black">
+            <div class="flex items-start justify-between gap-4">
+            <div>
+                <h2 id="lessonTitle" class="text-2xl font-bold text-black">Mini predavanje</h2>
+                <p id="lessonSubtitle" class="text-sm text-black/80 mt-1">
+                Preden začneš, na hitro ponovi snov.
+                </p>
+            </div>
+            <button id="lessonSkip" class="text-sm px-3 py-1 rounded-lg border hover:bg-gray-50">
+                Preskoči
+            </button>
             </div>
 
-            <!-- Start overlay (timer) -->
-            <div id="startOverlay" class="hidden fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-                <div class="start-card rounded-2xl shadow-2xl px-8 py-6 text-center space-y-3">
-                    <h2 class="text-2xl font-bold">Pripravljeni na igro? 🎯</h2>
-                    <p class="text-gray-500 dark:text-slate-300 text-sm">Igra se začne čez</p>
-                    <div id="countdown" class="text-5xl font-extrabold text-blue-600">3</div>
-                </div>
+            <div id="lessonBody" class="space-y-4 max-h-[55vh] overflow-auto pr-1"></div>
+
+        <!-- 🎯 Izbira cilja -->
+        <div class="mt-4 text-sm text-center">
+        <p class="font-semibold mb-2" style="color:#000 !important;">
+            🎯 Izberi cilj za to igro
+        </p>
+
+        <div class="flex justify-center gap-6">
+            <label class="flex items-center gap-2 cursor-pointer" style="color:#000 !important; font-weight:600;">
+            <input type="radio" name="goal" value="60" class="accent-blue-600 scale-110">
+            <span style="color:#000 !important;">60%</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer" style="color:#000 !important; font-weight:600;">
+            <input type="radio" name="goal" value="80" class="accent-blue-600 scale-110" checked>
+            <span style="color:#000 !important;">80%</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer" style="color:#000 !important; font-weight:600;">
+            <input type="radio" name="goal" value="90" class="accent-blue-600 scale-110">
+            <span style="color:#000 !important;">90%</span>
+            </label>
+        </div>
+        </div>
+
+
+            <div class="flex justify-end gap-2 pt-2">
+            <button id="lessonContinue" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                Nadaljuj na igro ▶️
+            </button>
             </div>
+        </div>
+        </div>
+
+        <!-- ✅ Start overlay (timer) OUTSIDE lessonOverlay -->
+        <div id="startOverlay"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div class="start-card rounded-2xl shadow-2xl px-8 py-6 text-center space-y-3 bg-white text-black">
+            <h2 class="text-2xl font-bold">Pripravljeni na igro? 🎯</h2>
+            <p class="text-sm text-black/80">Igra se začne čez</p>
+            <div id="countdown" class="text-5xl font-extrabold text-blue-600">3</div>
+        </div>
+        </div>
+
 
     </main>
 
