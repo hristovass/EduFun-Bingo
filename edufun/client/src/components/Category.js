@@ -7,10 +7,10 @@ function CategoryPage() {
     const navigate = useNavigate();
 
     const categories = [
-        { name: 'History', image: '/images/historyy.png' },
-        { name: 'Technology', image: '/images/computer.png' },
-        { name: 'Geography', image: '/images/world.png' },
-        { name: 'Upset', image: '/images/note.png' }
+        { name: 'Programiranje', image: '/images/programming.png' },
+        { name: 'Algoritmi', image: '/images/algorithm.png' },
+        { name: 'Matematika', image: '/images/calculator.png' },
+        { name: 'Podatkovne baze', image: '/images/data-server.png' }
     ];
 
     const handleLogout = () => {

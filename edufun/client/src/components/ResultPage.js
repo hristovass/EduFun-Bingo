@@ -40,7 +40,7 @@ function ResultPage() {
 
     return (
         <div className="container text-center mt-5">
-            <h2 className="results-title">Results</h2>
+            <h2 className="results-title">Results for {username || 'user'}</h2>
             {results.length === 0 ? (
                 <div className="alert alert-info">Nema sačuvanih rezultata za ovog korisnika.</div>
             ) : (

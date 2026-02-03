@@ -6,6 +6,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 function QuestionsPage({ onComplete }) { 
     const { category } = useParams();
     const [questions, setQuestions] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [score, setScore] = useState(0);
@@ -17,15 +19,26 @@ function QuestionsPage({ onComplete }) {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
+                setIsLoading(true);
+                setLoadError(null);
                 const response = await fetch(`http://localhost:8090/api/questions/${category}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
                 setQuestions(data);
+                setCurrentQuestionIndex(0);
+                setSelectedAnswer(null);
+                setScore(0);
+                setTimeLeft(15);
+                setIsGameOver(false);
             } catch (error) {
                 console.error('Error fetching questions:', error);
-                alert('Došlo je do greške prilikom učitavanja pitanja: ' + error.message);
+                setLoadError(error);
+                alert('Failed to load questions: ' + error.message);
+                setQuestions([]);
+            } finally {
+                setIsLoading(false);
             }
         };
         
@@ -33,6 +46,9 @@ function QuestionsPage({ onComplete }) {
     }, [category]);
 
     useEffect(() => {
+        if (questions.length === 0 || isGameOver) {
+            return;
+        }
         const timer = setInterval(() => {
             setTimeLeft((prevTime) => {
                 if (prevTime <= 1) {
@@ -45,7 +61,7 @@ function QuestionsPage({ onComplete }) {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [questions.length, isGameOver, currentQuestionIndex]);
 
     const handleAnswerClick = (answer) => {
         if (selectedAnswer === null) {
@@ -100,12 +116,18 @@ function QuestionsPage({ onComplete }) {
             navigate(`/results?username=${username}`);
         } catch (error) {
             console.error('Error saving result:', error);
-            alert('Došlo je do greške prilikom čuvanja rezultata: ' + error.message);
+            alert('DoÅ¡lo je do greÅ¡ke prilikom Äuvanja rezultata: ' + error.message);
         }
     };
 
     if (questions.length === 0) {
-        return <div className="loading-text">Loading questions...</div>;
+        if (isLoading) {
+            return <div className="loading-text">Loading questions...</div>;
+        }
+        if (loadError) {
+            return <div className="loading-text">Failed to load questions.</div>;
+        }
+        return <div className="loading-text">No questions found for this category.</div>;
     }
 
     const currentQuestion = questions[currentQuestionIndex];

@@ -1,13 +1,24 @@
 .button {
     width: auto;
     padding: 10px 20px;
-    background-color: rgb(181, 164, 131);
-    color: white;
+    background: linear-gradient(135deg, #ff7a1a 0%, #ffb347 100%);
+    color: #fff;
     border: none;
     border-radius: 5px;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 6px 14px rgba(255, 122, 26, 0.25);
+}
+
+.button:hover {
+    background: linear-gradient(135deg, #ff8a2a 0%, #ffc266 100%);
+    transform: translateY(-1px);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(255, 122, 26, 0.25);
 }
 
 

@@ -25,20 +25,38 @@
 .answer-btn {
     width: 100%;
     max-width: 300px;
-    background-color: rgb(181, 164, 131);
-    color: white;
+    background: linear-gradient(135deg, #ff7a1a 0%, #ffb347 100%);
+    color: #fff;
     border: none;
     border-radius: 5px;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     padding: 10px 15px;
     text-align: center;
+    box-shadow: 0 6px 14px rgba(255, 122, 26, 0.25);
 }
 
 .answer-btn:hover {
-    background-color: rgb(161, 144, 111);
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff8a2a 0%, #ffc266 100%);
+    transform: translateY(-1px);
+}
+
+.answer-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(255, 122, 26, 0.25);
+}
+
+.answer-btn.btn-success {
+    background: linear-gradient(135deg, #2ecc71 0%, #6ee7b7 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 6px 14px rgba(46, 204, 113, 0.25);
+}
+
+.answer-btn.btn-danger {
+    background: linear-gradient(135deg, #ff4d4f 0%, #ff8a8a 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 6px 14px rgba(255, 77, 79, 0.25);
 }
 
 .score-time-container h4 {
@@ -54,19 +72,25 @@
 .back-button {
     width: auto;
     padding: 10px 20px;
-    background-color: rgb(181, 164, 131);
-    color: white;
+    background: linear-gradient(135deg, #ff7a1a 0%, #ffb347 100%);
+    color: #fff;
     border: none;
     border-radius: 5px;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     text-align: center;
+    box-shadow: 0 6px 14px rgba(255, 122, 26, 0.25);
 }
 
 .back-button:hover {
-    background-color: rgb(161, 144, 111);
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff8a2a 0%, #ffc266 100%);
+    transform: translateY(-1px);
+}
+
+.back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(255, 122, 26, 0.25);
 }
 
 .loading-text {

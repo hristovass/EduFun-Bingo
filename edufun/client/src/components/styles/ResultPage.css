@@ -3,7 +3,10 @@
 }
 
 .h2, .results-title {
-    color: #fff;
+    background: linear-gradient(135deg, #ff7a1a 0%, #ffb347 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .table {

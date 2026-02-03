@@ -1,6 +1,6 @@
 body {
   font-family: 'Montserrat', sans-serif;
-  background-image: url("C:\Users\Lenovo\Desktop\EduFun-Bingo\edufun\client\public\images\wallpaper4.webp");
+  background-image: url("C:\Users\PC\rups\EduFun-Bingo\edufun\client\public\images\wallpaper4.webp");
   color: #fff;
   height: 100vh;
   background-size: cover;
@@ -65,17 +65,24 @@ body {
   width: 100%;
   max-width: 600px;
   padding: 10px;
-  background-color: rgb(181, 164, 131);
-  color: white;
+  background: linear-gradient(135deg, #ff7a1a 0%, #ffb347 100%);
+  color: #fff;
   border: none;
   border-radius: 5px;
   font-size: 1.5rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 14px rgba(255, 122, 26, 0.25);
 }
 
 .button:hover {
-  background-color: rgba(181, 164, 131, 0.8);
+  background: linear-gradient(135deg, #ff8a2a 0%, #ffc266 100%);
+  transform: translateY(-1px);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(255, 122, 26, 0.25);
 }
 
 .message {
