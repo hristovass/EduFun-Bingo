@@ -13,8 +13,18 @@ function QuestionsPage({ onComplete }) {
     const [score, setScore] = useState(0);
     const [timeLeft, setTimeLeft] = useState(15);
     const [isGameOver, setIsGameOver] = useState(false);
+    const [skipUsed, setSkipUsed] = useState(false);
     const username = localStorage.getItem('username');
     const navigate = useNavigate();
+
+    const shuffleArray = (items) => {
+        const array = [...items];
+        for (let i = array.length - 1; i > 0; i -= 1) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -26,12 +36,17 @@ function QuestionsPage({ onComplete }) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                setQuestions(data);
+                const shuffled = data.map((q) => ({
+                    ...q,
+                    shuffledAnswers: shuffleArray(q.answers),
+                }));
+                setQuestions(shuffled);
                 setCurrentQuestionIndex(0);
                 setSelectedAnswer(null);
                 setScore(0);
                 setTimeLeft(15);
                 setIsGameOver(false);
+                setSkipUsed(false);
             } catch (error) {
                 console.error('Error fetching questions:', error);
                 setLoadError(error);
@@ -74,20 +89,34 @@ function QuestionsPage({ onComplete }) {
         }
     };
 
+    const goToNextQuestion = async () => {
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            setSelectedAnswer(null);
+            setTimeLeft(15);
+            setIsGameOver(false);
+        } else {
+            await saveResult();
+            if (onComplete) {
+                onComplete();
+            }
+        }
+    };
+
+    const handleSkip = async () => {
+        if (skipUsed || questions.length === 0) {
+            return;
+        }
+        setSkipUsed(true);
+        setSelectedAnswer(null);
+        setIsGameOver(false);
+        await goToNextQuestion();
+    };
+
     useEffect(() => {
         if (isGameOver) {
             const timer = setTimeout(async () => {
-                if (currentQuestionIndex < questions.length - 1) {
-                    setCurrentQuestionIndex(currentQuestionIndex + 1);
-                    setSelectedAnswer(null);
-                    setTimeLeft(15);
-                    setIsGameOver(false);
-                } else {
-                    await saveResult();
-                    if (onComplete) {
-                        onComplete();
-                    }
-                }
+                await goToNextQuestion();
             }, 2000);
     
             return () => clearTimeout(timer);
@@ -136,7 +165,7 @@ function QuestionsPage({ onComplete }) {
         <div className="container question-page text-center mt-5">
             <h3 className="question-text">{currentQuestion.question}</h3>
             <div className="mt-4 answers-container">
-                {currentQuestion.answers.map((answer, index) => (
+                {currentQuestion.shuffledAnswers.map((answer, index) => (
                     <button
                         key={index}
                         onClick={() => handleAnswerClick(answer)}
@@ -153,6 +182,13 @@ function QuestionsPage({ onComplete }) {
             </div>
             <div className="mt-4 back-button-container">
                 <button onClick={() => navigate('/category')} className="btn btn-secondary back-button">Back</button>
+                <button
+                    onClick={handleSkip}
+                    className="btn btn-secondary back-button skip-button"
+                    disabled={skipUsed || isGameOver || questions.length === 0}
+                >
+                    {skipUsed ? 'Skip Used' : 'Skip'}
+                </button>
             </div>
         </div>
     );

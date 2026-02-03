@@ -11,7 +11,7 @@ function ResultPage() {
     useEffect(() => {
         const fetchResults = async () => {
             if (!username) {
-                console.error('Korisničko ime nije definirano');
+                console.error('KorisniÄko ime nije definirano');
                 return;
             }
 
@@ -26,7 +26,7 @@ function ResultPage() {
                 setResults(data);
             } catch (error) {
                 console.error('Error fetching results:', error);
-                alert('Došlo je do greške prilikom učitavanja rezultata: ' + error.message);
+                alert('DoÅ¡lo je do greÅ¡ke prilikom uÄitavanja rezultata: ' + error.message);
             }
         };
     
@@ -38,38 +38,60 @@ function ResultPage() {
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
 
+    const allowedCategories = ['programiranje', 'algoritmi', 'matematika', 'podatkovne baze'];
+    const averageByCategory = results.reduce((acc, result) => {
+        if (!allowedCategories.includes(result.category)) {
+            return acc;
+        }
+        const key = result.category;
+        if (!acc[key]) {
+            acc[key] = { total: 0, count: 0 };
+        }
+        acc[key].total += result.score;
+        acc[key].count += 1;
+        return acc;
+    }, {});
+
     return (
         <div className="container text-center mt-5">
             <h2 className="results-title">Results for {username || 'user'}</h2>
-            {results.length === 0 ? (
-                <div className="alert alert-info">Nema sačuvanih rezultata za ovog korisnika.</div>
-            ) : (
-                <table className="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>CATEGORY</th>
-                            <th>POINTS</th>
-                            <th>DATE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {results.map((result, index) => (
-                            <tr key={index}>
-                                <td>{result.category}</td>
-                                <td>{result.score}</td>
-                                <td>{formatDate(result.createdAt)}</td>
+            <div className="results-content">
+                {results.length === 0 ? (
+                    <div className="alert alert-info">Nema saÄuvanih rezultata za ovog korisnika.</div>
+                ) : (
+                    <table className="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>CATEGORY</th>
+                                <th>POINTS</th>
+                                <th>DATE</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            {results.map((result, index) => (
+                                <tr key={index}>
+                                    <td>{result.category}</td>
+                                    <td>{result.score}</td>
+                                    <td>{formatDate(result.createdAt)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+                {Object.keys(averageByCategory).length > 0 && (
+                    <div className="averages averages-right">
+                        {Object.entries(averageByCategory).map(([category, data]) => (
+                            <div key={category} className="average-item">
+                                Povprecna ocena po {category}: {(data.total / data.count).toFixed(2)}
+                            </div>
                         ))}
-                    </tbody>
-                </table>
-            )}
-            <div className="mt-4">
-            <button 
-    onClick={() => navigate('/category')}
-    className="button"
->
-    Back
-</button>
+                    </div>
+                )}
+                <div className="mt-4">
+                    <button onClick={() => navigate('/category')} className="button">
+                        Back
+                    </button>
+                </div>
             </div>
         </div>
     );

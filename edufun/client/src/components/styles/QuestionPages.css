@@ -51,12 +51,44 @@
     background: linear-gradient(135deg, #2ecc71 0%, #6ee7b7 100%) !important;
     color: #fff !important;
     box-shadow: 0 6px 14px rgba(46, 204, 113, 0.25);
+    animation: correctPulse 350ms ease-out;
 }
 
 .answer-btn.btn-danger {
     background: linear-gradient(135deg, #ff4d4f 0%, #ff8a8a 100%) !important;
     color: #fff !important;
     box-shadow: 0 6px 14px rgba(255, 77, 79, 0.25);
+    animation: wrongShake 350ms ease-out;
+}
+
+@keyframes correctPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes wrongShake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-3px);
+    }
+    50% {
+        transform: translateX(3px);
+    }
+    75% {
+        transform: translateX(-2px);
+    }
+    100% {
+        transform: translateX(0);
+    }
 }
 
 .score-time-container h4 {
@@ -67,6 +99,9 @@
 
 .back-button-container {
     margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
 }
 
 .back-button {
