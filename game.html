@@ -424,6 +424,11 @@
             let questionIndex = -1;
             let limitIndex = 20;
 
+            let examMode = false;
+            let examQuestionCount = 15;
+            let examAnswered = 0;
+            let examCorrect = 0;
+
             const questionImage = document.getElementById("questionImage");
             let playerIds = [];
             let playerNames = [];
@@ -553,6 +558,13 @@
                 }
                 if (gameOver) return;
 
+                if (examMode) {
+                    timeRemaining = 15;
+                    progressBar.classList.remove("bonus-active");
+                    updateTimerDisplay(timeRemaining);
+                    updateProgressBar(timeRemaining);
+                }
+                else {
                 const hasBonus = playerBonus[currentPlayer];
                 timeRemaining = hasBonus ? 20 : 15;
 
@@ -565,6 +577,7 @@
                 }
                 updateProgressBar(timeRemaining);
                 playerBonus[currentPlayer] = false;
+            }
 
                 playBgMusic();
 
@@ -624,6 +637,9 @@
                 console.log("Loading game data...");
                 parameters = JSON.parse(localStorage.getItem('parameters'));
 
+                examMode = !!parameters.examMode;
+                examQuestionCount = Number(parameters.examQuestionCount || 15);
+
                 if (!parameters) {
                     console.error("Ni parameters v localStorage");
                     return;
@@ -679,6 +695,13 @@
                 console.log("Zmešano:", gameData);
 
                 limitIndex = gameData.length - 1;
+                if (examMode) {
+                limitIndex = Math.min(gameData.length - 1, examQuestionCount - 1);
+                }
+                if (examMode) {
+                    if (skipBtn) skipBtn.classList.add("hidden");
+                    if (fiftyBtn) fiftyBtn.classList.add("hidden");
+                }
 
                 renderBoards();
                 play();
@@ -728,9 +751,13 @@
                 document.getElementById("2").innerText = q.options[2];
                 document.getElementById("3").innerText = q.options[3];
 
-                updateSkipButton();
+                if (!examMode){
+                    updateSkipButton();
+                    updateFiftyButton();
+                }
+                
                 startTimer();
-                updateFiftyButton();
+                
             }
 
             /* ---------- ODGOVOR NA VPRAŠANJE ---------- */
@@ -752,6 +779,10 @@
                         selectedIndex
                     );
                     isCorrectAnswer = !!result?.correct;
+                    if (examMode) {
+                        examAnswered++;
+                        if (isCorrectAnswer) examCorrect++;
+                    }
 
                     // subjectKey skušamo dobiti iz vprašanja, fallback statsSubject
                     const q = gameData[questionIndex];
@@ -777,12 +808,14 @@
                     if (isCorrectAnswer) {
                         failStreak[pIdx] = 0;
 
+                        if (!examMode) {
                         streaks[pIdx] = (streaks[pIdx] || 0) + 1;
                         if (streaks[pIdx] === 3) {
                             playerBonus[pIdx] = true;
                             streaks[pIdx] = 0;
                             showToast(playerNames[pIdx] + " je zaslužil BONUS +5s! 🎉", "success");
                         }
+                    }
 
                         playCorrect();
                         button.classList.add("bg-green-500", "text-white", "border-green-500");
@@ -807,7 +840,7 @@
                         playerror();
                         button.classList.add("bg-red-500", "text-white", "border-red-500");
 
-                        if (failStreak[pIdx] === 5) {
+                        if (!examMode && failStreak[pIdx] === 5) {
                             failStreak[pIdx] = 0;
                             if (!fiftyUsedAlready[pIdx]) {
                                 fiftyAvailable[pIdx] = true;
@@ -819,7 +852,11 @@
 
                     highlightTurn(pIdx);
 
-                    if (result?.bingo) {
+                    if (examMode && examAnswered >= examQuestionCount) {
+                        endExam();
+                        return;
+                    }
+                    if (!examMode && result?.bingo) {
                         endGame(pIdx);
                     }
                 } catch (e) {
@@ -976,6 +1013,47 @@
                 }
                 updateSkipButton();
             }
+
+            function calcGrade(percent) {
+  if (percent >= 90) return 10;
+  if (percent >= 80) return 9;
+  if (percent >= 70) return 8;
+  if (percent >= 60) return 7;
+  if (percent >= 50) return 6;
+  return 5;
+}
+
+function endExam() {
+  gameOver = true;
+  clearInterval(timerInterval);
+  disableAnswerButtons();
+  highlightTurn(-1);
+
+  const percent = Math.round((examCorrect / examQuestionCount) * 100);
+  const grade = calcGrade(percent);
+
+  // koristi postojeći winner modal kao "Exam finished"
+  const title = document.getElementById('winnerName');
+  const percentEl = document.getElementById("finalPercentText");
+  const goalEl = document.getElementById("goalResultText");
+  const list = document.getElementById('winnerAchievements');
+
+  if (title) title.textContent = "✅ Exam završen";
+  if (percentEl) percentEl.textContent = `Tačno: ${examCorrect}/${examQuestionCount} (${percent}%)`;
+  if (goalEl) goalEl.textContent = `Ocena: ${grade}`;
+
+  // sakrij “achievements” deo (nije bitan za exam) ili ga očisti
+  if (list) {
+    list.innerHTML = `<li>📝 Režim: Exam (bez pomoći)</li>`;
+  }
+
+  // sakrij listu netačnih ako ne želiš
+  const incorrectSection = document.getElementById('incorrectSection');
+  if (incorrectSection) incorrectSection.classList.add('hidden');
+
+  document.getElementById('winnerModal')?.classList.remove('hidden');
+}
+
 
             function showWinnerModal(name, winnerIdx) {
                 const totalQ = limitIndex + 1;
@@ -1248,6 +1326,11 @@
             // --- SHOW lesson overlay THEN timer ---
             async function showLessonThenIntro() {
                 try {
+                    const paramsExam = JSON.parse(localStorage.getItem('parameters') || 'null');
+                    if(paramsExam?.examMode) {
+                        startIntro();
+                        return;
+                    }
                     const lessonOverlay = document.getElementById('lessonOverlay');
                     if (!lessonOverlay) {
                         startIntro();
