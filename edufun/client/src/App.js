@@ -12,6 +12,7 @@ import ResultPage from './components/ResultPage';
 import Settings from './components/Settings';
 import Home from './components/Home';
 import Hub from './components/Hub';
+import ProfileMenu from './components/ProfileMenu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import CreateQuiz from './components/CreateQuiz';
@@ -38,6 +39,7 @@ function App() {
         <Route path="/settings" element={<Settings onThemeChange={handleThemeChange} />} />
         <Route path="/create-quiz" element={<CreateQuiz />} />
       </Routes>
+      <ProfileMenu />
       <Link to="/settings" className="settings-icon"><FontAwesomeIcon icon={faCog} /></Link>
     </div>
   );

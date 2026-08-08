@@ -11,7 +11,10 @@ export default function Login() {
       const response=await fetch('http://localhost:8090/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
       const data=await response.json();
       if(response.ok){
-        localStorage.setItem('token',data.token); localStorage.setItem('username',username);
+        localStorage.setItem('token',data.token);
+        localStorage.setItem('username',data.user?.username || username);
+        localStorage.setItem('email',data.user?.email || '');
+        sessionStorage.setItem('profilePassword',password);
         if(window.api?.setCurrentUser) await window.api.setCurrentUser({username});
         const pending=localStorage.getItem('pendingGame'); localStorage.removeItem('pendingGame');
         if(pending==='bingo' && window.api?.openBingo) await window.api.openBingo();

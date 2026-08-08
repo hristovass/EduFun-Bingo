@@ -12,20 +12,12 @@ const categories = [
 export default function CategoryPage() {
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    if (window.api?.setCurrentUser) window.api.setCurrentUser(null);
-    navigate('/');
-  };
-
   return (
     <main className="workspace-page">
       <button className="page-back-button" onClick={() => navigate('/hub')} aria-label="Nazaj">←</button>
       <section className="workspace-shell category-shell">
         <header className="workspace-header">
           <div><span className="section-kicker">EDUFUN / PREDMETI</span><h1>Izberi področje</h1></div>
-          <button className="quiet-button" onClick={logout}>Odjava</button>
         </header>
         <div className="subject-grid">
           {categories.map((category) => (

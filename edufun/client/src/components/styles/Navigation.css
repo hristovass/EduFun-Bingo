@@ -36,3 +36,92 @@
   outline: 3px solid rgba(157, 140, 255, 0.35);
   outline-offset: 3px;
 }
+
+.profile-icon {
+  position: fixed;
+  top: 23px;
+  right: 84px;
+  z-index: 30;
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  border: 1px solid rgba(201, 194, 255, 0.2);
+  border-radius: 50%;
+  background: #111629;
+  color: #fff;
+  font-size: 1.35rem;
+  cursor: pointer;
+}
+
+.profile-icon:hover,
+.profile-icon[aria-expanded="true"] {
+  background: #1a2140;
+  border-color: rgba(201, 194, 255, 0.4);
+}
+
+.profile-panel {
+  position: fixed;
+  top: 88px;
+  right: 22px;
+  z-index: 40;
+  width: min(340px, calc(100vw - 44px));
+  padding: 24px;
+  border: 1px solid rgba(201, 194, 255, 0.2);
+  border-radius: 20px;
+  background: #111629;
+  color: #f5f3ff;
+  text-align: left;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+}
+
+.profile-panel h2 {
+  margin: 0 0 18px;
+  font-size: 1.35rem;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(201, 194, 255, 0.12);
+}
+
+.profile-field > span {
+  color: #969db6;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.profile-password {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profile-password button {
+  border: 0;
+  background: transparent;
+  color: #c9c2ff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.profile-logout {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px 18px;
+  border: 1px solid rgba(255, 140, 164, 0.35);
+  border-radius: 12px;
+  background: rgba(255, 92, 125, 0.1);
+  color: #ff9eb2;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profile-logout:hover {
+  background: rgba(255, 92, 125, 0.18);
+}
