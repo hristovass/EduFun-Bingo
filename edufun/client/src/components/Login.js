@@ -1,68 +1,25 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './styles/Register.css';
 
-function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const response = await fetch('http://localhost:8090/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
-    });
-
-    const data = await response.json();
-
-    if (response.status === 200) {
-      setMessage('Login successful');
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', username);
-      window.location.href = '/category';
-    } else {
-      setMessage(data.message);
-    }
+export default function Login() {
+  const [username,setUsername]=useState(''); const [password,setPassword]=useState(''); const [message,setMessage]=useState(''); const [showPassword,setShowPassword]=useState(false); const navigate=useNavigate();
+  const handleSubmit=async(e)=>{e.preventDefault();
+    try {
+      const response=await fetch('http://localhost:8090/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+      const data=await response.json();
+      if(response.ok){
+        localStorage.setItem('token',data.token); localStorage.setItem('username',username);
+        if(window.api?.setCurrentUser) await window.api.setCurrentUser({username});
+        const pending=localStorage.getItem('pendingGame'); localStorage.removeItem('pendingGame');
+        if(pending==='bingo' && window.api?.openBingo) await window.api.openBingo();
+        else if(pending==='edufun') navigate('/edufun'); else navigate('/hub');
+      } else setMessage(data.message || 'Prijava ni uspela.');
+    } catch { setMessage('Strežnik ni dosegljiv. Zaženi skupni projekt z npm run dev:all.'); }
   };
-
-  return (
-    <div className="container">
-      <h1 className="title">Prijavite se</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="label">
-            Username:
-            <input 
-              type="text" 
-              className="form-control"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)} 
-              required 
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label className="label">
-            Password:
-            <input 
-              type="password" 
-              className="form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
-            />
-          </label>
-        </div>
-        <button type="submit" className="button">Prijavi se</button>
-      </form>
-      <p className="message">{message}</p>
-      <div className="toggle-container">
-        <p>Nemate nalog? <span onClick={() => window.location.href = '/register'} className="link">Registrujte se</span></p>
-      </div>
-    </div>
-  );
+  return <div className="auth-page"><button className="page-back-button" type="button" onClick={()=>navigate('/')} aria-label="Nazaj">←</button><div className="auth-form-card"><div className="brand-pill">STUDENT LEARNING HUB</div><h1>Prijava</h1><p>En račun za EduFun in Quiz Bingo.</p><form onSubmit={handleSubmit}><label>Uporabniško ime<input value={username} onChange={e=>setUsername(e.target.value)} required /></label><label>Geslo<div className="password-input-wrap"><input type={showPassword ? 'text' : 'password'} value={password} onChange={e=>setPassword(e.target.value)} required /><button type="button" className="password-toggle" onClick={()=>setShowPassword(!showPassword)} aria-label={showPassword ? 'Skrij geslo' : 'Prikaži geslo'}><FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} /></button></div></label><button className="primary-action" type="submit">Prijavi se</button></form><p className="form-message">{message}</p><button className="text-action" type="button" onClick={()=>navigate('/register')}>Še nimaš računa? Registracija</button></div></div>;
 }
 
-export default Login;
+

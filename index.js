@@ -8,6 +8,8 @@ const {createClient} = require("@supabase/supabase-js");
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 let win, add_player_window;
+let currentUser = null;
+const EDUFUN_URL = process.env.EDUFUN_URL || 'http://localhost:3000';
 
 const createWindow = () => {
     win = new BrowserWindow({
@@ -17,7 +19,8 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js')
         }
     });
-    win.loadFile('index.html');
+    // The integrated React hub is now the main entry point.
+    win.loadURL(EDUFUN_URL).catch(() => win.loadFile('index.html'));
 }
 
 function createAddPlayerWindow() {
@@ -40,6 +43,50 @@ function createAddPlayerWindow() {
         add_player_window = null;
     });
 }
+
+
+
+// ---------- INTEGRATED APP NAVIGATION / SESSION ----------
+ipcMain.handle('set-current-user', async (_, user) => {
+    currentUser = user && user.username ? { username: user.username, email: user.email || '' } : null;
+    return { success: true, user: currentUser };
+});
+
+ipcMain.handle('get-current-user', async () => currentUser);
+
+ipcMain.handle('open-hub', async () => {
+    if (!win) return { success: false };
+    await win.loadURL(`${EDUFUN_URL}/hub`);
+    return { success: true };
+});
+
+ipcMain.handle('ensure-bingo-player', async () => {
+    try {
+        if (!currentUser?.username) return { success: false, error: 'No signed-in user' };
+        let { data, error } = await supabase.from('User').select('*').eq('username', currentUser.username).maybeSingle();
+        if (error) throw error;
+        if (!data) {
+            const payload = {
+                username: currentUser.username,
+                first_name: currentUser.username,
+                last_name: 'Student',
+                password: `hub_${Date.now()}`
+            };
+            const created = await supabase.from('User').insert(payload).select().single();
+            if (created.error) throw created.error;
+            data = created.data;
+        }
+        return { success: true, data };
+    } catch (err) {
+        return { success: false, error: err.message };
+    }
+});
+
+ipcMain.handle('open-bingo', async () => {
+    if (!win) return { success: false };
+    await win.loadFile('index.html');
+    return { success: true };
+});
 
 app.whenReady().then(() => {
     ipcMain.handle('ping', () => 'pong');

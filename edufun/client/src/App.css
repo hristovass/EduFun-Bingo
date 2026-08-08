@@ -15,12 +15,12 @@ body {
 body.light {
   background-color: #ffffff;
   color: #000000;
-  background-image: url("C:\Users\PC\rups\EduFun-Bingo\edufun\client\public\images\wallpaper4.webp");
+  background-image: url('./assets/wallpaper4.webp');
 }
 body.dark {
   background-color: #121212;
   color: #ffffff;
-  background-image: url("C:\Users\PC\rups\EduFun-Bingo\edufun\client\public\images\wallpaper3.png");
+  background-image: url('./assets/wallpaper3.png');
 }
 
 .App {
@@ -120,7 +120,9 @@ body.dark {
   position: absolute;
   top: 20px;
   right: 20px;
+  left: auto;
   color: white;
+  z-index: 10;
 }
 
 .settings-menu {

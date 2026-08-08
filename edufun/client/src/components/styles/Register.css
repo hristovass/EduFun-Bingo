@@ -1,6 +1,6 @@
 body {
   font-family: 'Montserrat', sans-serif;
-  background-image: url("C:\Users\PC\rups\EduFun-Bingo\edufun\client\public\images\wallpaper4.webp");
+  background-image: url('../../assets/wallpaper4.webp');
   color: #fff;
   height: 100vh;
   background-size: cover;
@@ -9,6 +9,173 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.auth-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: radial-gradient(circle at top left, #5b4bdb 0, #17152e 42%, #0b0b18 100%);
+  color: #f8f8ff;
+}
+
+.auth-form-card {
+  width: min(520px, 94vw);
+  padding: 36px 28px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(15,15,35,.82);
+  backdrop-filter: blur(18px);
+  border-radius: 28px;
+  box-shadow: 0 28px 80px rgba(0,0,0,.35);
+}
+
+.auth-form-card h1 {
+  margin: 18px 0 8px;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+}
+
+.auth-form-card p {
+  color: #c8c8da;
+  margin: 0 0 24px;
+}
+
+.auth-form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-form-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 700;
+  color: #f2f2ff;
+}
+
+.auth-form-card input,
+.auth-form-card select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.auth-form-card input::placeholder {
+  color: #d0d0e3;
+}
+
+.auth-form-card input:focus,
+.auth-form-card select:focus {
+  border-color: #9d8cff;
+  box-shadow: 0 0 0 3px rgba(157,140,255,.18);
+}
+
+.password-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrap input {
+  padding-right: 50px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #d7d0ff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.primary-action,
+.secondary-action,
+.text-action,
+.back-button {
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.primary-action {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #816dff, #a85cff);
+  color: white;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.secondary-action {
+  margin-top: 18px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.08);
+  color: white;
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  line-height: 1;
+  background: rgba(157, 140, 255, 0.12);
+  color: #f2f1ff;
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 8px 18px rgba(15, 15, 35, 0.2);
+  z-index: 2;
+}
+
+.back-button:hover {
+  background: rgba(157, 140, 255, 0.18);
+}
+
+.text-action {
+  width: 100%;
+  background: transparent;
+  color: #c7c0ff;
+  padding: 10px 0 0;
+  text-align: center;
+}
+
+.form-message {
+  color: #f4d99b;
+  margin: 12px 0 0;
+  min-height: 20px;
+}
+
+.brand-pill {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(130,110,255,.18);
+  color: #c9c2ff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .14em;
 }
 
 .container {

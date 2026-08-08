@@ -1,100 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './styles/Register.css';
 
-function Register() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [isLogin, setIsLogin] = useState(false); 
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const url = isLogin ? 'http://localhost:8090/login' : 'http://localhost:8090/register';
-    const body = isLogin 
-      ? JSON.stringify({ username, password }) 
-      : JSON.stringify({ username, email, password });
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: body
-    });
-
-    const data = await response.json();
-
-    if (response.status === 200 || response.status === 201) {
-      setMessage(isLogin ? 'Login successful!' : 'User registered successfully. Redirecting to login...');
-      
-      if (isLogin) {
-        localStorage.setItem('token', data.token);
-        window.location.href = '/category';
-      } else {
-        setTimeout(() => {
-          window.location.href = '/login'; 
-        }, 2000);
-      }
-    } else {
-      setMessage(data.message);
-    }
-  };
-
-  return (
-    <div className="container">
-      <h1 className="title">{isLogin ? 'Prijavite se' : 'Registracija'}</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="label">
-            Username:
-            <input 
-              type="text" 
-              className="form-control" 
-              value={username}
-              onChange={(e) => setUsername(e.target.value)} 
-              required 
-            />
-          </label>
-        </div>
-        {!isLogin && (
-          <div className="form-group">
-            <label className="label">
-              Email:
-              <input 
-                type="email" 
-                className="form-control" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
-              />
-            </label>
-          </div>
-        )}
-        <div className="form-group">
-          <label className="label">
-            Password:
-            <input 
-              type="password" 
-              className="form-control" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
-            />
-          </label>
-        </div>
-        <button type="submit" className="button">{isLogin ? 'Prijavi se' : 'Registruj se'}</button>
-      </form>
-      <p className="message">{message}</p>
-      <div className="toggle-container">
-        <p>{isLogin ? 'Nemate nalog?' : 'Već imate nalog?'}</p>
-        <button 
-          className="button" 
-          onClick={() => setIsLogin(!isLogin)} 
-        >
-          {isLogin ? 'Registrujte se' : 'Prijavi se'}
-        </button>
-      </div>
-    </div>
-  );
+export default function Register(){
+ const [username,setUsername]=useState(''); const [email,setEmail]=useState(''); const [password,setPassword]=useState(''); const [message,setMessage]=useState(''); const [showPassword,setShowPassword]=useState(false); const navigate=useNavigate();
+ const submit=async(e)=>{e.preventDefault(); try{const r=await fetch('http://localhost:8090/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,email,password})}); const d=await r.json(); if(r.ok){setMessage('Račun je ustvarjen. Sedaj se prijavi.'); setTimeout(()=>navigate('/login'),700)} else setMessage(d.message||'Registracija ni uspela.')}catch{setMessage('Strežnik ni dosegljiv. Zaženi npm run dev:all.')}};
+ return <div className="auth-page"><button className="page-back-button" type="button" onClick={()=>navigate('/')} aria-label="Nazaj">←</button><div className="auth-form-card"><div className="brand-pill">STUDENT LEARNING HUB</div><h1>Ustvari račun</h1><p>Ta račun uporabljaš za oba dela združene aplikacije.</p><form onSubmit={submit}><label>Uporabniško ime<input value={username} onChange={e=>setUsername(e.target.value)} required /></label><label>E-pošta<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required /></label><label>Geslo<div className="password-input-wrap"><input type={showPassword ? 'text' : 'password'} value={password} onChange={e=>setPassword(e.target.value)} minLength="6" required /><button type="button" className="password-toggle" onClick={()=>setShowPassword(!showPassword)} aria-label={showPassword ? 'Skrij geslo' : 'Prikaži geslo'}><FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} /></button></div></label><button className="primary-action" type="submit">Registracija</button></form><p className="form-message">{message}</p><button className="text-action" type="button" onClick={()=>navigate('/login')}>Že imaš račun? Prijava</button></div></div>;
 }
 
-export default Register;
+

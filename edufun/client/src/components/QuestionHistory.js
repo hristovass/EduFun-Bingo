@@ -162,7 +162,10 @@ function QuestionsPage({ onComplete }) {
     const currentQuestion = questions[currentQuestionIndex];
 
     return (
-        <div className="container question-page text-center mt-5">
+        <main className="question-page">
+            <button className="page-back-button" type="button" onClick={() => navigate('/category')} aria-label="Nazaj">←</button>
+            <div className="quiz-meta"><span>{category}</span><span>Vprašanje {currentQuestionIndex + 1} / {questions.length}</span></div>
+            <div className="quiz-progress"><span style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }} /></div>
             <h3 className="question-text">{currentQuestion.question}</h3>
             <div className="mt-4 answers-container">
                 {currentQuestion.shuffledAnswers.map((answer, index) => (
@@ -177,20 +180,20 @@ function QuestionsPage({ onComplete }) {
                 ))}
             </div>
             <div className="mt-4 score-time-container">
-                <h4 className="score-text">Points: {score}</h4>
-                <h4 className="time-text">Time: {timeLeft}s</h4>
+                <h4 className="score-text"><small>TOČKE</small>{score}</h4>
+                <h4 className="time-text"><small>PREOSTALI ČAS</small>{timeLeft}s</h4>
             </div>
             <div className="mt-4 back-button-container">
-                <button onClick={() => navigate('/category')} className="btn btn-secondary back-button">Back</button>
+                <button onClick={() => navigate('/category')} className="back-button">Končaj</button>
                 <button
                     onClick={handleSkip}
-                    className="btn btn-secondary back-button skip-button"
+                    className="back-button skip-button"
                     disabled={skipUsed || isGameOver || questions.length === 0}
                 >
-                    {skipUsed ? 'Skip Used' : 'Skip'}
+                    {skipUsed ? 'Preskok porabljen' : 'Preskoči vprašanje'}
                 </button>
             </div>
-        </div>
+        </main>
     );
 }
 

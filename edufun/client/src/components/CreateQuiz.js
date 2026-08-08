@@ -74,7 +74,9 @@ const CreateQuiz = () => {
 
     return (
         <div className="create-quiz-container">
-            <h2 className="create-quiz-title">Create a New Quiz</h2>
+            <button className="page-back-button" type="button" onClick={handleBack} aria-label="Nazaj">←</button>
+            <span className="section-kicker">UREJEVALNIK VSEBINE</span>
+            <h2 className="create-quiz-title">Ustvari nov kviz</h2>
             <div className="category-select-container">
                 <select className="form-select" value={category} onChange={handleCategoryChange}>
                     <option value="">Select Category</option>
@@ -120,10 +122,7 @@ const CreateQuiz = () => {
             ))}
 
             <button className="animated-button" onClick={handleSaveQuiz}>
-                Save Quiz
-            </button>
-            <button className="animated-button" onClick={handleBack} style={{ marginTop: '10px' }}>
-                Back
+                Shrani kviz
             </button>
         </div>
     );

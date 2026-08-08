@@ -53,8 +53,11 @@ function ResultPage() {
     }, {});
 
     return (
-        <div className="container text-center mt-5">
-            <h2 className="results-title">Results for {username || 'user'}</h2>
+        <main className="results-page">
+            <button className="page-back-button" onClick={() => navigate('/category')} aria-label="Nazaj">←</button>
+            <div className="results-shell">
+            <span className="section-kicker">ANALITIKA UČENJA</span>
+            <h2 className="results-title">Rezultati: {username || 'uporabnik'}</h2>
             <div className="results-content">
                 {results.length === 0 ? (
                     <div className="alert alert-info">Nema saÄuvanih rezultata za ovog korisnika.</div>
@@ -62,9 +65,9 @@ function ResultPage() {
                     <table className="table table-bordered">
                         <thead>
                             <tr>
-                                <th>CATEGORY</th>
-                                <th>POINTS</th>
-                                <th>DATE</th>
+                                <th>PODROČJE</th>
+                                <th>TOČKE</th>
+                                <th>DATUM</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,13 +90,9 @@ function ResultPage() {
                         ))}
                     </div>
                 )}
-                <div className="mt-4">
-                    <button onClick={() => navigate('/category')} className="button">
-                        Back
-                    </button>
-                </div>
             </div>
-        </div>
+            </div>
+        </main>
     );
 }
 

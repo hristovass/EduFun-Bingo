@@ -39,35 +39,42 @@ const Settings = ({ onThemeChange }) => {
     }, [fontSize, fontFamily]);
 
     const handleBackClick = () => {
-        console.log("Back button clicked");
         navigate(-1);
     };
 
     return (
-        <div className="settings">
-            <h2 style={{ color: 'white' }}>Settings</h2>
-            <button onClick={toggleTheme} className="btn-settings">
-                <FontAwesomeIcon icon={faCog} /> Toggle Theme
-            </button>
-            <div className="font-size-setting">
-                <label htmlFor="font-size" style={{ color: 'white' }}>Font Size: </label>
-                <select id="font-size" value={fontSize} onChange={handleFontSizeChange}>
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
-                </select>
+        <div className="auth-page settings-page">
+            <button className="page-back-button" type="button" onClick={handleBackClick} aria-label="Nazaj">←</button>
+            <div className="auth-form-card settings-card">
+                <div className="brand-pill">STUDENT LEARNING HUB</div>
+                <h1>Settings</h1>
+                <p>Prilagodi videz in nastavitve aplikacije.</p>
+
+                <button onClick={toggleTheme} className="primary-action settings-action">
+                    <FontAwesomeIcon icon={faCog} /> Toggle Theme
+                </button>
+
+                <div className="settings-group">
+                    <label htmlFor="font-size">Velikost pisave</label>
+                    <select id="font-size" value={fontSize} onChange={handleFontSizeChange}>
+                        <option value="small">Majhna</option>
+                        <option value="medium">Srednja</option>
+                        <option value="large">Velika</option>
+                    </select>
+                </div>
+
+                <div className="settings-group">
+                    <label htmlFor="font-family">Družina pisave</label>
+                    <select id="font-family" value={fontFamily} onChange={handleFontFamilyChange}>
+                        <option value="Arial">Arial</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                    </select>
+                </div>
+
             </div>
-            <div className="font-family-setting">
-                <label htmlFor="font-family" style={{ color: 'white' }}>Font Family: </label>
-                <select id="font-family" value={fontFamily} onChange={handleFontFamilyChange}>
-                    <option value="Arial">Arial</option>
-                    <option value="Verdana">Verdana</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Courier New">Courier New</option>
-                </select>
-            </div>
-            <button className="btn-back" onClick={handleBackClick}>Back</button>
         </div>
     );
 };
