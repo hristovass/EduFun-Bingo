@@ -1,141 +1,409 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sl">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Quiz Bingo — Statistika</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="web-api.js"></script>
   <link rel="stylesheet" href="bingo-theme.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    body.dark {
-  background: #080b14 !important;
-  color: #f4f6ff !important;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-body.dark main {
-  background: #101526 !important;
-  border-color: rgba(143, 156, 255, 0.18) !important;
-  color: #f4f6ff !important;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at 15% 5%,
+          rgba(98, 112, 220, 0.16),
+          transparent 32rem
+        ),
+        radial-gradient(
+          circle at 90% 85%,
+          rgba(98, 112, 220, 0.08),
+          transparent 30rem
+        ),
+        #080b14 !important;
 
-body.dark h1,
-body.dark h2,
-body.dark p,
-body.dark span,
-body.dark th,
-body.dark td {
-  color: #f4f6ff !important;
-}
+      color: #f4f6ff !important;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
 
-/* SITE STATS KARTICKI */
-body.dark .card {
-  background: #151b2d !important;
-  border-color: rgba(143, 156, 255, 0.18) !important;
-  color: #f4f6ff !important;
-}
+      padding: 40px 20px;
+    }
 
-/* TABELA */
-body.dark .card table {
-  background: #151b2d !important;
-}
+    .stats-shell {
+      width: min(900px, 100%);
+      margin: 0 auto;
 
-body.dark .card thead {
-  background: #202742 !important;
-}
+      background: rgba(16, 21, 38, 0.94);
+      border: 1px solid rgba(143, 156, 255, 0.16);
+      border-radius: 28px;
 
-body.dark .card tbody,
-body.dark .card tbody tr,
-body.dark .card tbody td {
-  background: #151b2d !important;
-  color: #d9def2 !important;
-}
+      padding: 32px;
 
-body.dark .card th {
-  background: #202742 !important;
-  color: #f4f6ff !important;
-}
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.4);
 
-/* GRAFIK */
-body.dark #stats-chart {
-  background: transparent !important;
-}
+      backdrop-filter: blur(20px);
+    }
 
-/* RESET */
-body.dark #reset-btn {
-  border-color: #ff7d8f !important;
-  color: #ff9aaa !important;
-}
+    .stats-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
 
-body.dark #reset-btn:hover {
-  background: rgba(255, 125, 143, 0.10) !important;
-}
+    .stats-label {
+      display: inline-block;
 
-/* NAZAJ */
-body.dark a[href="index.html"] {
-  background: #8f9cff !important;
-  color: #080b14 !important;
-  box-shadow: none !important;
-}
+      padding: 6px 12px;
+      margin-bottom: 12px;
 
-body.dark a[href="index.html"]:hover {
-  background: #aab4ff !important;
-}
+      border-radius: 999px;
+      border: 1px solid rgba(143, 156, 255, 0.25);
+
+      color: #aeb7ff;
+      background: rgba(143, 156, 255, 0.08);
+
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .stats-title {
+      margin: 0;
+      color: #f4f6ff;
+      font-size: 30px;
+      font-weight: 750;
+    }
+
+    .stats-subtitle {
+      margin-top: 8px;
+      color: #9ca5bd;
+      font-size: 14px;
+    }
+
+    .card {
+      background: rgba(21, 27, 45, 0.96) !important;
+      border: 1px solid rgba(143, 156, 255, 0.16) !important;
+      border-radius: 20px;
+
+      padding: 18px;
+      margin-bottom: 20px;
+
+      color: #f4f6ff !important;
+
+      box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    .card h2 {
+      color: #f4f6ff !important;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      background: transparent !important;
+      color: #f4f6ff !important;
+    }
+
+    thead {
+      background: #202742 !important;
+    }
+
+    th {
+      padding: 14px 16px;
+
+      color: #f4f6ff !important;
+      font-size: 13px;
+      font-weight: 700;
+
+      border-bottom: 1px solid rgba(143, 156, 255, 0.20);
+    }
+
+    td {
+      padding: 13px 16px;
+      color: #d9def2 !important;
+
+      border-bottom:
+        1px solid rgba(143, 156, 255, 0.08);
+    }
+
+    tbody tr {
+      background: #151b2d !important;
+    }
+
+    tbody tr:hover {
+      background: #1b2238 !important;
+    }
+
+    #stats-chart {
+      background: transparent !important;
+      max-height: 330px;
+    }
+
+    #heatmap {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .heatmap-card {
+      padding: 16px;
+
+      border-radius: 15px;
+      border: 1px solid rgba(143, 156, 255, 0.22);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(143, 156, 255, 0.16),
+          rgba(77, 89, 170, 0.10)
+        ) !important;
+
+      color: #ffffff !important;
+
+      box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.18);
+    }
+
+    .heatmap-card strong,
+    .heatmap-card span {
+      color: #ffffff !important;
+    }
+
+    .heatmap-percent {
+      color: #aeb7ff !important;
+      font-weight: 800;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+
+      margin-top: 24px;
+
+      flex-wrap: wrap;
+    }
+
+    #reset-btn {
+      padding: 10px 17px;
+
+      border-radius: 999px;
+      border:
+        1px solid rgba(255, 125, 143, 0.55);
+
+      background:
+        rgba(255, 125, 143, 0.05);
+
+      color: #ff9aaa !important;
+
+      font-size: 14px;
+      font-weight: 650;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+    }
+
+    #reset-btn:hover {
+      background:
+        rgba(255, 125, 143, 0.13);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      padding: 11px 18px;
+
+      border-radius: 999px;
+
+      border:
+        1px solid rgba(143, 156, 255, 0.35);
+
+      background:
+        rgba(143, 156, 255, 0.12);
+
+      color: #f4f6ff !important;
+
+      text-decoration: none;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      transition: 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background:
+        rgba(143, 156, 255, 0.22);
+
+      border-color:
+        rgba(143, 156, 255, 0.70);
+    }
+
+    #no-data {
+      padding: 30px;
+      text-align: center;
+
+      color: #9ca5bd !important;
+
+      background: #151b2d;
+
+      border:
+        1px solid rgba(143, 156, 255, 0.16);
+
+      border-radius: 18px;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .stats-shell {
+        padding: 20px 14px;
+      }
+
+      .stats-title {
+        font-size: 24px;
+      }
+
+      .actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .back-btn,
+      #reset-btn {
+        width: 100%;
+      }
+    }
   </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-slate-900 flex items-center justify-center">
-  <main class="w-full max-w-4xl mx-auto p-6 bg-white/80 rounded-3xl shadow-lg border border-slate-200">
-    <h1 class="text-3xl font-bold mb-6 text-center">📊 Statistika po predmetih</h1>
 
-    <p id="no-data" class="text-center text-slate-500 hidden">
-      Še ni zabeleženih rezultatov. Najprej odigraj kakšno igro 😊
+<body class="dark">
+
+  <main class="stats-shell">
+
+    <header class="stats-header">
+      <div class="stats-label">
+        QUIZ BINGO · ANALITIKA
+      </div>
+
+      <h1 class="stats-title">
+        📊 Statistika po predmetih
+      </h1>
+
+      <p class="stats-subtitle">
+        Pregled uspešnosti pri dosedanjih igrah.
+      </p>
+    </header>
+
+    <p id="no-data" class="hidden">
+      Še ni zabeleženih rezultatov.
+      Najprej odigraj kakšno igro 😊
     </p>
 
-    <section id="stats-section" class="space-y-6 hidden">
+    <section
+      id="stats-section"
+      class="hidden"
+    >
+
       <!-- TABELA -->
-      <div class="card overflow-x-auto rounded-2xl bg-white/80 border border-slate-200 shadow-lg">
-        <table class="min-w-full text-sm">
-          <thead class="bg-slate-100/80">
+      <div class="card table-wrapper">
+        <table>
+          <thead>
             <tr>
-              <th class="px-4 py-3 text-left font-semibold">Predmet / kategorija</th>
-              <th class="px-4 py-3 text-right font-semibold">Pravilni</th>
-              <th class="px-4 py-3 text-right font-semibold">Vsi odgovori</th>
-              <th class="px-4 py-3 text-right font-semibold">Uspešnost</th>
+              <th style="text-align:left;">
+                Predmet / kategorija
+              </th>
+
+              <th style="text-align:right;">
+                Pravilni
+              </th>
+
+              <th style="text-align:right;">
+                Vsi odgovori
+              </th>
+
+              <th style="text-align:right;">
+                Uspešnost
+              </th>
             </tr>
           </thead>
-          <tbody id="stats-table-body" class="divide-y divide-slate-200"></tbody>
+
+          <tbody id="stats-table-body"></tbody>
         </table>
       </div>
 
       <!-- GRAF -->
-      <div class="card bg-white/80 border border-slate-200 rounded-2xl p-4 shadow-lg">
-        <h2 class="text-xl font-semibold mb-2">Pravilni odgovori po predmetih</h2>
-        <canvas id="stats-chart" height="120"></canvas>
+      <div class="card">
+        <h2>
+          Pravilni odgovori po predmetih
+        </h2>
+
+        <canvas
+          id="stats-chart"
+          height="120"
+        ></canvas>
       </div>
 
-      <!-- "Heatmap" kartice -->
-      <div class="card bg-white/80 border border-slate-200 rounded-2xl p-4 shadow-lg">
-        <h2 class="text-xl font-semibold mb-3">Hitri pregled (barvna uspešnost)</h2>
-        <div id="heatmap" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+      <!-- HITRI PREGLED -->
+      <div class="card">
+        <h2>
+          Hitri pregled
+        </h2>
+
+        <div id="heatmap"></div>
       </div>
 
-      <!-- Reset -->
-      <button
-        id="reset-btn"
-        class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/70 text-red-600 hover:bg-red-500/10 transition"
-      >
-        ♻ Resetiraj statistiko
-      </button>
+      <div class="actions">
+        <button
+          id="reset-btn"
+          type="button"
+        >
+          ♻ Resetiraj statistiko
+        </button>
+      </div>
+
     </section>
 
-    <!-- Nazaj na začetek / nova igra -->
-    <div class="mt-8 text-center">
-      <a href="index.html"
-         class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-semibold shadow-lg shadow-emerald-500/30 transition">
-        ⬅ Nazaj na začetek
+    <div
+      id="no-data-back"
+      class="actions hidden"
+    >
+      <a
+        href="index.html"
+        class="back-btn"
+      >
+        ← Nazaj na Bingo
       </a>
     </div>
+
   </main>
 
   <script>
@@ -150,159 +418,373 @@ body.dark a[href="index.html"]:hover {
       localStorage.removeItem(STATS_KEY);
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      /* 🔹 Uporabi shranjeno temo (light / dark) */
-      const theme = localStorage.getItem('theme') || 'light';
-      document.body.classList.toggle('dark', theme === 'dark');
+    document.addEventListener(
+      'DOMContentLoaded',
+      async () => {
 
-      // 🔹 mapa: ID kategorije -> ime predmeta (Programiranje, Matematika, ...)
-      const categoriesById = {};
-      if (window.api?.loadMenu) {
-        try {
-          const menu = await window.api.loadMenu();
-          (menu.categories || []).forEach(cat => {
-            categoriesById[String(cat.id)] = cat.name;
-          });
-        } catch (e) {
-          console.error('Napaka pri loadMenu v stats.html:', e);
+        /* Vedno uporabljamo temno temo */
+        localStorage.setItem('theme', 'dark');
+        document.body.classList.add('dark');
+
+        /* ID kategorije -> ime */
+        const categoriesById = {};
+
+        if (window.api?.loadMenu) {
+          try {
+            const menu =
+              await window.api.loadMenu();
+
+            (menu.categories || [])
+              .forEach(cat => {
+                categoriesById[
+                  String(cat.id)
+                ] = cat.name;
+              });
+
+          } catch (e) {
+            console.error(
+              'Napaka pri loadMenu v stats.html:',
+              e
+            );
+          }
         }
-      }
 
-      function displayName(key) {
-        return categoriesById[String(key)] || key;
-      }
+        function displayName(key) {
+          return (
+            categoriesById[String(key)] ||
+            key
+          );
+        }
 
-      const stats = await getStats();
-      const subjects = Object.keys(stats);
+        const stats = await getStats();
+        const subjects =
+          Object.keys(stats || {});
 
-      const noDataEl = document.getElementById('no-data');
-      const statsSection = document.getElementById('stats-section');
+        const noDataEl =
+          document.getElementById('no-data');
 
-      if (subjects.length === 0) {
-        noDataEl.classList.remove('hidden');
-        return;
-      }
+        const statsSection =
+          document.getElementById(
+            'stats-section'
+          );
 
-      statsSection.classList.remove('hidden');
+        const noDataBack =
+          document.getElementById(
+            'no-data-back'
+          );
 
-      // --- tabela ---
-      const tbody = document.getElementById('stats-table-body');
-      subjects.forEach(subKey => {
-        const { correct, total } = stats[subKey];
-        const rate = total ? Math.round((correct / total) * 100) : 0;
-        const name = displayName(subKey);
+        if (subjects.length === 0) {
+          noDataEl.classList.remove('hidden');
+          noDataBack.classList.remove('hidden');
+          return;
+        }
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="px-4 py-2 font-medium">${name}</td>
-          <td class="px-4 py-2 text-right">${correct}</td>
-          <td class="px-4 py-2 text-right">${total}</td>
-          <td class="px-4 py-2 text-right">${rate}%</td>
-        `;
-        tbody.appendChild(tr);
-      });
+        statsSection.classList.remove('hidden');
 
-      // --- podatki za graf: ŠTEVILO PRAVILNIH ODGOVOROV ---
-      const labels = subjects.map(k => displayName(k));
-      const correctCounts = subjects.map(k => {
-        const { correct } = stats[k];
-        return correct || 0;
-      });
+        /* ---------- TABELA ---------- */
 
-      const ctx = document.getElementById('stats-chart').getContext('2d');
+        const tbody =
+          document.getElementById(
+            'stats-table-body'
+          );
 
-      const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-      gradient.addColorStop(0, '#8f9cff');
-      gradient.addColorStop(1, '#6f7ee8');  
+        subjects.forEach(subKey => {
 
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Pravilni odgovori',
-            data: correctCounts,
-            backgroundColor: gradient,
-            borderColor: '#c7ceff',
-            borderWidth: 1,
-            borderRadius: 12,
-            borderSkipped: false,
-            barThickness: 40
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: 'rgba(15,23,42,0.95)',
-              titleColor: '#e5e7eb',
-              bodyColor: '#e5e7eb',
-              padding: 10,
+          const {
+            correct,
+            total
+          } = stats[subKey];
+
+          const rate =
+            total
+              ? Math.round(
+                  (correct / total) * 100
+                )
+              : 0;
+
+          const name =
+            displayName(subKey);
+
+          const tr =
+            document.createElement('tr');
+
+          tr.innerHTML = `
+            <td style="font-weight:600;">
+              ${name}
+            </td>
+
+            <td style="text-align:right;">
+              ${correct}
+            </td>
+
+            <td style="text-align:right;">
+              ${total}
+            </td>
+
+            <td style="text-align:right; color:#aeb7ff !important; font-weight:700;">
+              ${rate}%
+            </td>
+          `;
+
+          tbody.appendChild(tr);
+        });
+
+        /* ---------- GRAF ---------- */
+
+        const labels =
+          subjects.map(
+            key => displayName(key)
+          );
+
+        const correctCounts =
+          subjects.map(key => {
+            return (
+              stats[key]?.correct || 0
+            );
+          });
+
+        const ctx =
+          document
+            .getElementById('stats-chart')
+            .getContext('2d');
+
+        const gradient =
+          ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            260
+          );
+
+        gradient.addColorStop(
+          0,
+          '#aeb7ff'
+        );
+
+        gradient.addColorStop(
+          1,
+          '#6f7ee8'
+        );
+
+        new Chart(ctx, {
+          type: 'bar',
+
+          data: {
+            labels,
+
+            datasets: [{
+              label:
+                'Pravilni odgovori',
+
+              data:
+                correctCounts,
+
+              backgroundColor:
+                gradient,
+
+              borderColor:
+                '#c7ceff',
+
               borderWidth: 1,
-              borderColor: 'rgba(148,163,184,0.5)',
-              callbacks: {
-                label: (ctx) => {
-                  const index = ctx.dataIndex;
-                  const key = subjects[index];
-                  const name = displayName(key);
-                  const correct = stats[key]?.correct || 0;
-                  const total = stats[key]?.total || 0;
-                  const percent = total ? Math.round((correct / total) * 100) : 0;
-                  return ` ${name}: ${correct}/${total} (${percent}%)`;
+
+              borderRadius: 10,
+
+              borderSkipped:
+                false,
+
+              barThickness: 40
+            }]
+          },
+
+          options: {
+            responsive: true,
+
+            maintainAspectRatio:
+              true,
+
+            plugins: {
+
+              legend: {
+                display: false
+              },
+
+              tooltip: {
+                backgroundColor:
+                  'rgba(8,11,20,0.97)',
+
+                titleColor:
+                  '#f4f6ff',
+
+                bodyColor:
+                  '#d9def2',
+
+                padding: 12,
+
+                borderWidth: 1,
+
+                borderColor:
+                  'rgba(143,156,255,0.35)',
+
+                callbacks: {
+
+                  label: context => {
+
+                    const index =
+                      context.dataIndex;
+
+                    const key =
+                      subjects[index];
+
+                    const name =
+                      displayName(key);
+
+                    const correct =
+                      stats[key]?.correct || 0;
+
+                    const total =
+                      stats[key]?.total || 0;
+
+                    const percent =
+                      total
+                        ? Math.round(
+                            (correct / total) *
+                            100
+                          )
+                        : 0;
+
+                    return (
+                      ` ${name}: ` +
+                      `${correct}/${total} ` +
+                      `(${percent}%)`
+                    );
+                  }
+                }
+              }
+            },
+
+            scales: {
+
+              x: {
+                border: {
+                  color:
+                    'rgba(143,156,255,0.15)'
+                },
+
+                grid: {
+                  display: false
+                },
+
+                ticks: {
+                  color: '#cbd5f5',
+
+                  font: {
+                    size: 12,
+                    weight: '600'
+                  }
+                }
+              },
+
+              y: {
+                beginAtZero: true,
+
+                border: {
+                  color:
+                    'rgba(143,156,255,0.15)'
+                },
+
+                grid: {
+                  color:
+                    'rgba(143,156,255,0.10)'
+                },
+
+                ticks: {
+                  color: '#9ca5bd',
+                  precision: 0
                 }
               }
             }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              ticks: {
-                color: theme === 'dark' ? '#cbd5f5' : '#0f172a',
-                font: { size: 12, weight: '600' }
-              }
-            },
-            y: {
-              beginAtZero: true,
-              grid: { color: 'rgba(148,163,184,0.25)' },
-              ticks: {
-                color: theme === 'dark' ? '#cbd5f5' : '#0f172a',
-                precision: 0
+          }
+        });
+
+        /* ---------- HITRI PREGLED ---------- */
+
+        const heatmap =
+          document.getElementById(
+            'heatmap'
+          );
+
+        subjects.forEach(subKey => {
+
+          const {
+            correct,
+            total
+          } = stats[subKey];
+
+          const rate =
+            total
+              ? Math.round(
+                  (correct / total) * 100
+                )
+              : 0;
+
+          const name =
+            displayName(subKey);
+
+          const card =
+            document.createElement('div');
+
+          card.className =
+            'heatmap-card';
+
+          card.innerHTML = `
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              gap:10px;
+            ">
+              <strong>
+                ${name}
+              </strong>
+
+              <span class="heatmap-percent">
+                ${rate}%
+              </span>
+            </div>
+
+            <div style="
+              margin-top:7px;
+              color:#9ca5bd;
+              font-size:12px;
+            ">
+              ${correct}/${total} pravilnih
+            </div>
+          `;
+
+          heatmap.appendChild(card);
+        });
+
+        /* ---------- RESET ---------- */
+
+        document
+          .getElementById('reset-btn')
+          .addEventListener(
+            'click',
+            async () => {
+
+              if (
+                confirm(
+                  'Res želiš izbrisati vso statistiko?'
+                )
+              ) {
+                await clearStats();
+                location.reload();
               }
             }
-          }
-        }
-      });
-
-      // --- "heatmap" kartice ---
-      const heatmap = document.getElementById('heatmap');
-      subjects.forEach(subKey => {
-        const { correct, total } = stats[subKey];
-        const rate = total ? Math.round((correct / total) * 100) : 0;
-        const hue = (rate / 100) * 120;
-        const name = displayName(subKey);
-
-        const card = document.createElement('div');
-        card.className = 'rounded-xl p-3 text-sm font-medium shadow-md';
-        card.style.backgroundColor = `hsl(${hue}, 70%, 35%)`;
-        card.innerHTML = `
-          <div class="flex justify-between items-center">
-            <span>${name}</span>
-            <span>${rate}%</span>
-          </div>
-          <div class="text-xs mt-1 opacity-80">${correct}/${total} pravilnih</div>
-        `;
-        heatmap.appendChild(card);
-      });
-
-      // --- reset gumb ---
-      document.getElementById('reset-btn').addEventListener('click', async () => {
-        if (confirm('Res želiš izbrisati vso statistiko?')) {
-          await clearStats();
-          location.reload();
-        }
-      });
-    });
+          );
+      }
+    );
   </script>
+
 </body>
 </html>
