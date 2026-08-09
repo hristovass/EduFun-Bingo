@@ -5,10 +5,7 @@ export default function Hub() {
   const navigate = useNavigate();
   const username = localStorage.getItem('username') || 'študent';
   useEffect(() => { if (window.api?.setCurrentUser && username !== 'študent') window.api.setCurrentUser({ username }); }, [username]);
-  const openBingo = async () => {
-    if (window.api?.openBingo) await window.api.openBingo();
-    else alert('Bingo je na voljo v skupnem Electron načinu: npm run dev:all');
-  };
+  const openBingo = () => { window.location.href = '/bingo/index.html'; };
   return <div className="integrated-page"><button className="page-back-button" type="button" onClick={() => navigate('/')} aria-label="Nazaj">←</button>
     <div className="integrated-shell">
     <div className="hub-top"><div><div className="brand-pill">OSEBNI DELOVNI PROSTOR</div><h1 className="hero-title small">Pozdravljen/a, {username}.</h1></div></div>

@@ -4,12 +4,16 @@
   "description": "First project for RUPS",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
+    "start": "npm run dev:web",
     "test": "test",
-    "start:bingo": "electron .",
+    "start:desktop": "electron .",
     "start:edufun:server": "node edufun/server.js",
     "start:edufun:client": "npm --prefix edufun/client start",
-    "dev:all": "concurrently -n EDU-SRV,EDU-CLI,BINGO \"npm run start:edufun:server\" \"npm run start:edufun:client\" \"wait-on http://localhost:3000 && electron .\""
+    "sync:bingo": "node scripts/sync-bingo-web.js",
+    "migrate:bingo": "node edufun/scripts/migrate-bingo-to-mongo.js",
+    "predev:web": "npm run sync:bingo",
+    "dev:web": "concurrently -n EDU-SRV,EDU-CLI \"npm run start:edufun:server\" \"npm run start:edufun:client\"",
+    "dev:all": "npm run dev:web"
   },
   "author": "DigitalnaBrigada",
   "license": "ISC",

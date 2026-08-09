@@ -1,0 +1,10 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+const target = path.join(root, 'edufun', 'client', 'public', 'bingo');
+const files = ['index.html', 'game.html', 'leaderboard.html', 'stats.html', 'avatar.html', 'add_player.html', 'web-api.js', 'bingo-theme.css'];
+const directories = ['images', 'sounds', 'assets'];
+fs.mkdirSync(target, { recursive: true });
+for (const file of files) fs.copyFileSync(path.join(root, file), path.join(target, file));
+for (const directory of directories) fs.cpSync(path.join(root, directory), path.join(target, directory), { recursive: true, force: true });
+console.log('Bingo web files synchronized.');

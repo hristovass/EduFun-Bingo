@@ -18,14 +18,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .catch((err) => console.error('Error connecting to MongoDB:', err));
 
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
-
-
-const User = mongoose.model('User', userSchema);
+const User = require('./models/User');
 
 
 const questionSchema = new mongoose.Schema({
@@ -52,8 +45,7 @@ app.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Email already exists' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, email, password });
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully' });
@@ -131,6 +123,8 @@ app.get('/api/results', async (req, res) => {
       res.status(500).json({ message: 'Error fetching results' });
   }
 });
+
+app.use('/api/bingo', require('./routes/bingo'));
 
 
 const PORT = process.env.PORT || 8090;

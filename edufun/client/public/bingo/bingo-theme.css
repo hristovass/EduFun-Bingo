@@ -1,0 +1,141 @@
+:root {
+  color-scheme: dark;
+  --bingo-bg: #060a14;
+  --bingo-panel: #101526;
+  --bingo-panel-soft: #151b2d;
+  --bingo-border: rgba(173, 181, 255, 0.17);
+  --bingo-text: #f4f3ff;
+  --bingo-muted: #9ca4bd;
+  --bingo-accent: #9b8cff;
+  --bingo-accent-soft: rgba(130, 110, 255, 0.14);
+}
+
+html, body { min-height: 100%; }
+
+body {
+  background:
+    linear-gradient(rgba(117, 126, 205, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(117, 126, 205, 0.055) 1px, transparent 1px),
+    radial-gradient(circle at 12% 0%, #171d39 0, transparent 38%),
+    var(--bingo-bg) !important;
+  background-size: 96px 96px, 96px 96px, auto, auto !important;
+  color: var(--bingo-text) !important;
+  font-family: Inter, Montserrat, Arial, sans-serif !important;
+}
+
+body > main {
+  margin: 72px auto 32px !important;
+  border: 1px solid var(--bingo-border) !important;
+  border-radius: 30px !important;
+  background: rgba(16, 21, 38, 0.97) !important;
+  color: var(--bingo-text) !important;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32) !important;
+}
+
+body h1, body h2, body h3, body label,
+body .text-gray-800, body .text-gray-700, body .text-gray-600 {
+  color: var(--bingo-text) !important;
+}
+
+body p, body footer, body .text-gray-500, body .text-slate-500 {
+  color: var(--bingo-muted) !important;
+}
+
+body section, body header, body footer { border-color: var(--bingo-border) !important; }
+
+body input, body select {
+  border-color: var(--bingo-border) !important;
+  background: var(--bingo-panel-soft) !important;
+  color: var(--bingo-text) !important;
+}
+
+body #grade-cards > div,
+body #category-cards > div,
+body #players-list > div,
+body #leaderboard-container > div,
+body .bg-white {
+  border-color: var(--bingo-border) !important;
+  background: var(--bingo-panel-soft) !important;
+  color: var(--bingo-text) !important;
+}
+
+body #grade-cards > .selected,
+body #category-cards > .selected {
+  border-color: var(--bingo-accent) !important;
+  background: var(--bingo-accent-soft) !important;
+}
+
+body button {
+  border-color: var(--bingo-border) !important;
+}
+
+body button:not(.bingo-chrome-button):not(.bingo-profile-logout):hover {
+  filter: brightness(1.08);
+}
+
+#open-settings,
+button[onclick*="window.location.href='index.html'"],
+button[onclick*='window.location.href="index.html"'] {
+  display: none !important;
+}
+
+.bingo-chrome-button {
+  position: fixed;
+  top: 22px;
+  z-index: 1000;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--bingo-border);
+  border-radius: 50%;
+  background: #111629;
+  color: #d8d3ff;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: 0.2s ease;
+}
+
+.bingo-chrome-button:hover,
+.bingo-chrome-button[aria-expanded="true"] {
+  border-color: rgba(201, 194, 255, 0.42) !important;
+  background: #1b2240;
+  transform: translateY(-1px);
+}
+
+.bingo-back { left: 24px; font-size: 1.55rem; }
+.bingo-profile { right: 88px; }
+.bingo-settings { right: 24px; }
+
+.bingo-profile-panel {
+  position: fixed;
+  top: 88px;
+  right: 24px;
+  z-index: 1001;
+  width: min(340px, calc(100vw - 48px));
+  padding: 24px;
+  border: 1px solid var(--bingo-border);
+  border-radius: 20px;
+  background: #111629;
+  color: var(--bingo-text);
+  text-align: left;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.52);
+}
+
+.bingo-profile-panel[hidden] { display: none; }
+.bingo-profile-panel h2 { margin: 0 0 18px; font-size: 1.35rem; font-weight: 800; }
+.bingo-profile-field { padding: 12px 0; border-bottom: 1px solid var(--bingo-border); }
+.bingo-profile-field span { display: block; margin-bottom: 5px; color: var(--bingo-muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
+.bingo-profile-field strong { color: var(--bingo-text); overflow-wrap: anywhere; }
+.bingo-password-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bingo-password-toggle { padding: 5px 8px; border: 0 !important; background: transparent; color: #c9c2ff; cursor: pointer; }
+.bingo-profile-logout { width: 100%; margin-top: 20px; padding: 12px 18px; border: 1px solid rgba(255, 140, 164, 0.35) !important; border-radius: 12px; background: rgba(255, 92, 125, 0.1); color: #ff9eb2; font-weight: 800; cursor: pointer; }
+
+@media (max-width: 640px) {
+  body > main { margin: 88px 12px 20px !important; border-radius: 22px !important; }
+  .bingo-back { left: 14px; }
+  .bingo-profile { right: 76px; }
+  .bingo-settings { right: 14px; }
+}

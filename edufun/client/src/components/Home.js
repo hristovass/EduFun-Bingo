@@ -15,8 +15,7 @@ export default function Home() {
       return;
     }
     if (game === 'edufun') navigate('/edufun');
-    else if (window.api?.openBingo) await window.api.openBingo();
-    else alert('Za Bingo zaženi skupni projekt z ukazom npm run dev:all.');
+    else window.location.href = '/bingo/index.html';
   };
 
   return <div className="integrated-page">

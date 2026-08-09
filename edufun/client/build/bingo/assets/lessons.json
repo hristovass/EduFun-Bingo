@@ -1,0 +1,71 @@
+{
+  "meta": { "version": 1 },
+  "lessonsById": {
+    "3": {
+      "title": "Algoritmi – Osnove",
+      "minutes": 2,
+      "content": "Algoritem je natančen postopek korakov za rešitev problema. Na testih je pogosto ključno razumeti časovno zahtevnost (Big-O) — kako hitro raste čas, ko n raste.\n\nTipične zahtevnosti:\n- O(1): konstantno (npr. dostop po indeksu)\n- O(log n): logaritemsko (binarno iskanje v urejenih podatkih)\n- O(n): en prehod čez seznam\n- O(n log n): učinkovito sortiranje\n- O(n^2): dvojne zanke, pogosto prepočasno\n\nBinarno iskanje deluje samo na UREJENIH podatkih. Vedno razpoloviš interval, zato je O(log n). Tipične napake: napačne meje (left/right), napačen pogoj v zanki (infinite loop), uporaba binarnega iskanja na neurejenih podatkih.",
+      "points": [
+        "Big-O: O(1), O(log n), O(n), O(n log n), O(n^2)",
+        "Binarno iskanje: urejenost + pravilne meje",
+        "Tipične napake: pogoji v zanki, left/right, mid"
+      ]
+    },
+    "2": {
+      "title": "Matematika – Osnove",
+      "minutes": 2,
+      "content": "Pri matematičnih nalogah je najpomembnejše: definicija + pravilen postopek. Vedno preveri pogoje (domene), ali je izraz definiran, in ali dimenzije/koraki sploh omogočajo operacijo.\n\nLimite:\n- Najprej preveri nedoločene oblike (0/0, ∞/∞).\n- Pogosti triki: krajšanje, racionalizacija, preoblikovanje (in po potrebi L'Hôpital, če je dovoljen).\n\nMatrike:\n- Množenje A·B je možno le, če je št. stolpcev A = št. vrstic B.\n- Najpogostejše napake: napačne dimenzije, napačen vrstni red množenja.\n\nSistemi enačb:\n- Gauss/Gauss-Jordan: pazljivo s pivotom (ničelni pivot → zamenjaj vrstico).",
+      "points": [
+        "Nedoločene oblike + triki (krajšanje, racionalizacija)",
+        "Matrike: dimenzije, vrstni red množenja",
+        "Gauss/Gauss-Jordan: pivot, zamenjava vrstic"
+      ]
+    },
+    "4": {
+      "title": "Podatkovne baze – SQL osnove",
+      "minutes": 2,
+      "content": "Relacijska baza podatkov shranjuje podatke v tabelah. Vrstica (row) je zapis, stolpec (column) je atribut. DBMS (npr. MySQL) omogoča poizvedovanje, varnost in transakcije.\n\nKljuči:\n- Primarni ključ (PK) enolično identificira zapis.\n- Tuji ključ (FK) povezuje tabele in zagotavlja referenčno integriteto.\n\nOsnovni SQL:\n- SELECT bere podatke, WHERE filtrira.\n- JOIN povezuje tabele (na pogost način preko PK/FK).\n- INSERT/UPDATE/DELETE spreminjajo podatke.\n\nNormalizacija zmanjšuje redundanco:\n- 1NF: atomske vrednosti\n- 2NF: neključni atributi so odvisni od celotnega PK\n- 3NF: brez tranzitivnih odvisnosti\n\nTransakcije in ACID:\nAtomicity (vse ali nič), Consistency, Isolation, Durability.",
+      "points": [
+        "PK/FK + referenčna integriteta",
+        "SELECT/WHERE/JOIN + INSERT/UPDATE/DELETE",
+        "Normalizacija (1NF, 2NF, 3NF) + ACID"
+      ]
+    },
+    "1": {
+      "title": "Programiranje – OOP osnove",
+      "minutes": 2,
+      "content": "Objektno usmerjeno programiranje (OOP) temelji na razredih in objektih:\n- Razred (class) je predloga.\n- Objekt je instanca razreda.\n\nGlavni OOP koncepti:\n- Enkapsulacija: skrijemo podatke in nadzorujemo dostop (private/public).\n- Dedovanje: podrazred prevzame lastnosti/metode nadrazreda.\n- Polimorfizem: ista metoda/mesnik, različne izvedbe (odvisno od tipa objekta).\n\nOverloading vs overriding:\n- Overloading: isto ime, različni parametri.\n- Overriding: podrazred prepiše implementacijo metode.\n\nPomembno v praksi:\n- Izjeme (try/catch) za runtime napake.\n- Kolekcije (npr. list/arraylist) + generiki (List<String>).\n- Moderni pojmi: garbage collection, thread-safe, race condition, dependency injection, design patterns (Singleton/Factory).",
+      "points": [
+        "OOP: class/object, enkapsulacija, dedovanje, polimorfizem",
+        "Overloading vs overriding + abstract vs interface",
+        "Izjeme, kolekcije, generiki + moderni pojmi (GC, thread-safe, DI, patterns)"
+      ]
+    }
+  },
+  "lessonsByName": {
+    "algoritmi": {
+      "title": "Algoritmi – Osnove",
+      "minutes": 2,
+      "content": "Algoritem je natančen postopek korakov. Big-O opisuje rast časa glede na n.\n- O(1): konstantno\n- O(log n): binarno iskanje (urejeno!)\n- O(n): en prehod\n- O(n^2): dvojne zanke\nTipične napake: napačne meje v binarnem iskanju, uporaba na neurejenih podatkih.",
+      "points": ["Big-O osnove", "Binarno iskanje", "Najpogostejše napake"]
+    },
+    "matematika": {
+      "title": "Matematika – Osnove",
+      "minutes": 2,
+      "content": "Vedno preveri pogoje in postopke. Limite: preveri nedoločene oblike (0/0, ∞/∞) in uporabi krajšanje/racionalizacijo. Matrike: dimenzije se morajo ujemati (A·B). Sistemi: Gauss/Gauss-Jordan in pivot.",
+      "points": ["Nedoločene oblike", "Matrike (dimenzije)", "Gauss/Gauss-Jordan (pivot)"]
+    },
+    "podatkovne baze": {
+      "title": "Podatkovne baze – SQL osnove",
+      "minutes": 2,
+      "content": "Relacijske baze: tabele (vrstice/stolpci). PK enolično označi zapis, FK povezuje tabele. SQL: SELECT/WHERE/JOIN ter INSERT/UPDATE/DELETE. Normalizacija zmanjšuje redundanco (1NF–3NF). ACID opisuje lastnosti transakcij.",
+      "points": ["PK/FK + integriteta", "SQL osnove", "Normalizacija + ACID"]
+    },
+    "programiranje": {
+      "title": "Programiranje – OOP osnove",
+      "minutes": 2,
+      "content": "OOP: razred vs objekt, enkapsulacija, dedovanje, polimorfizem. Overloading = različni parametri, overriding = prepis metode. Izjeme (try/catch), kolekcije in generiki. Moderno: GC, thread-safe, DI, vzorci (Singleton/Factory).",
+      "points": ["OOP 4 koncepti", "Overload vs override", "Izjeme + kolekcije + moderni pojmi"]
+    }
+  }
+}

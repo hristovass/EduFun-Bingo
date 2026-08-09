@@ -17,7 +17,7 @@ export default function Login() {
         sessionStorage.setItem('profilePassword',password);
         if(window.api?.setCurrentUser) await window.api.setCurrentUser({username});
         const pending=localStorage.getItem('pendingGame'); localStorage.removeItem('pendingGame');
-        if(pending==='bingo' && window.api?.openBingo) await window.api.openBingo();
+        if(pending==='bingo') window.location.href='/bingo/index.html';
         else if(pending==='edufun') navigate('/edufun'); else navigate('/hub');
       } else setMessage(data.message || 'Prijava ni uspela.');
     } catch { setMessage('Strežnik ni dosegljiv. Zaženi skupni projekt z npm run dev:all.'); }
