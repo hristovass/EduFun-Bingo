@@ -242,26 +242,37 @@ body.dark #category-cards .selected {
     <span>Statistika znanja</span>
 </button>
 
-    
-                    <!-- EduFun -->
-                    <button onclick="window.location.href='/hub'"
-                        class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors font-semibold">
-                        EduFun
-                    </button>
                     <!-- EXAM MODE -->
 <div class="mt-3 flex items-center justify-between gap-3">
-  <button id="examToggle"
+  <button
+    id="examToggle"
     type="button"
-    class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors font-semibold w-full">
+    class="px-4 py-2 rounded-xl
+           bg-[#151b2d]
+           border border-[#8f9cff]/30
+           text-white
+           hover:bg-[#202742]
+           hover:border-[#8f9cff]
+           transition-all
+           font-semibold
+           w-full">
     📝 Exam mode: OFF
-  </button>
+</button>
 
-  <select id="examCount"
-    class="px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-800 font-semibold">
+  <select
+    id="examCount"
+    class="px-3 py-2 rounded-xl
+           bg-[#151b2d]
+           border border-[#8f9cff]/30
+           text-white
+           font-semibold
+           hover:bg-[#202742]
+           focus:outline-none
+           focus:border-[#8f9cff]">
     <option value="10">10 pitanja</option>
     <option value="15" selected>15 pitanja</option>
     <option value="20">20 pitanja</option>
-  </select>
+</select>
 </div>
 
 

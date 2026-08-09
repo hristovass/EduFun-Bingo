@@ -9,37 +9,79 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    /* DARK TEMA – podobno kot ostale strani */
     body.dark {
-      background: linear-gradient(to bottom right, #0f172a, #1e293b) !important;
-      color: #e5e7eb !important;
-    }
+  background: #080b14 !important;
+  color: #f4f6ff !important;
+}
 
-    body.dark main {
-      background-color: #020617 !important;
-      border-color: #334155 !important;
-      color: #e5e7eb !important;
-    }
+body.dark main {
+  background: #101526 !important;
+  border-color: rgba(143, 156, 255, 0.18) !important;
+  color: #f4f6ff !important;
+}
 
-    body.dark h1,
-    body.dark h2,
-    body.dark p,
-    body.dark span,
-    body.dark th,
-    body.dark td {
-      color: #e5e7eb !important;
-    }
+body.dark h1,
+body.dark h2,
+body.dark p,
+body.dark span,
+body.dark th,
+body.dark td {
+  color: #f4f6ff !important;
+}
 
-    body.dark .card {
-      background-color: #020617 !important;
-      border-color: #1f2937 !important;
-      color: #e5e7eb !important;
-    }
+/* SITE STATS KARTICKI */
+body.dark .card {
+  background: #151b2d !important;
+  border-color: rgba(143, 156, 255, 0.18) !important;
+  color: #f4f6ff !important;
+}
 
-    body.dark #reset-btn {
-      border-color: #f97373 !important;
-      color: #fecaca !important;
-    }
+/* TABELA */
+body.dark .card table {
+  background: #151b2d !important;
+}
+
+body.dark .card thead {
+  background: #202742 !important;
+}
+
+body.dark .card tbody,
+body.dark .card tbody tr,
+body.dark .card tbody td {
+  background: #151b2d !important;
+  color: #d9def2 !important;
+}
+
+body.dark .card th {
+  background: #202742 !important;
+  color: #f4f6ff !important;
+}
+
+/* GRAFIK */
+body.dark #stats-chart {
+  background: transparent !important;
+}
+
+/* RESET */
+body.dark #reset-btn {
+  border-color: #ff7d8f !important;
+  color: #ff9aaa !important;
+}
+
+body.dark #reset-btn:hover {
+  background: rgba(255, 125, 143, 0.10) !important;
+}
+
+/* NAZAJ */
+body.dark a[href="index.html"] {
+  background: #8f9cff !important;
+  color: #080b14 !important;
+  box-shadow: none !important;
+}
+
+body.dark a[href="index.html"]:hover {
+  background: #aab4ff !important;
+}
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 text-slate-900 flex items-center justify-center">
@@ -170,8 +212,8 @@
       const ctx = document.getElementById('stats-chart').getContext('2d');
 
       const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-      gradient.addColorStop(0, '#22c55e');
-      gradient.addColorStop(1, '#16a34a');
+      gradient.addColorStop(0, '#8f9cff');
+      gradient.addColorStop(1, '#6f7ee8');  
 
       new Chart(ctx, {
         type: 'bar',
@@ -181,7 +223,7 @@
             label: 'Pravilni odgovori',
             data: correctCounts,
             backgroundColor: gradient,
-            borderColor: '#bbf7d0',
+            borderColor: '#c7ceff',
             borderWidth: 1,
             borderRadius: 12,
             borderSkipped: false,
