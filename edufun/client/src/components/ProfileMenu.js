@@ -14,6 +14,9 @@ export default function ProfileMenu() {
   const username = localStorage.getItem('username') || 'študent';
   const email = localStorage.getItem('email') || 'E-pošta ni na voljo';
   const password = sessionStorage.getItem('profilePassword') || '';
+  const selectedPlayer = localStorage.getItem('avatar_select_player');
+  const legacyAvatar = selectedPlayer && localStorage.getItem(`avatar_${selectedPlayer}`);
+  const profileAvatar = localStorage.getItem('profileAvatar') || (legacyAvatar ? `/bingo/images/avatars/${legacyAvatar}` : '');
 
   const logout = async () => {
     localStorage.removeItem('token');
@@ -26,7 +29,9 @@ export default function ProfileMenu() {
   };
 
   return <>
-    <button className="profile-icon" type="button" onClick={() => setProfileOpen(!profileOpen)} aria-label="Profil" aria-expanded={profileOpen}>👤</button>
+    <button className="profile-icon" type="button" onClick={() => setProfileOpen(!profileOpen)} aria-label="Profil" aria-expanded={profileOpen}>
+      {profileAvatar ? <img src={profileAvatar} alt="" /> : <span aria-hidden="true">P</span>}
+    </button>
     {profileOpen && <div className="profile-panel">
       <h2>Profil</h2>
       <div className="profile-field"><span>Uporabniško ime</span><strong>{username}</strong></div>

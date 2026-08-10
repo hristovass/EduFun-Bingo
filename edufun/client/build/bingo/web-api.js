@@ -49,13 +49,24 @@
     profile.type = 'button';
     profile.setAttribute('aria-label', 'Profil');
     profile.setAttribute('aria-expanded', 'false');
-    profile.textContent = '👤';
+    const selectedPlayer = localStorage.getItem('avatar_select_player');
+    const legacyAvatar = selectedPlayer && localStorage.getItem(`avatar_${selectedPlayer}`);
+    const profileAvatar = localStorage.getItem('profileAvatar') || (legacyAvatar ? `/bingo/images/avatars/${legacyAvatar}` : '');
+    if (profileAvatar) {
+      const avatarImage = document.createElement('img');
+      avatarImage.className = 'bingo-profile-avatar';
+      avatarImage.src = profileAvatar;
+      avatarImage.alt = '';
+      profile.appendChild(avatarImage);
+    } else {
+      profile.innerHTML = '<svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="12" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 19c.7-4 3-6 6.5-6s5.8 2 6.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    }
 
     const settings = document.createElement('button');
     settings.className = 'bingo-chrome-button bingo-settings';
     settings.type = 'button';
     settings.setAttribute('aria-label', 'Nastavitve');
-    settings.textContent = '⚙';
+    settings.innerHTML = '<svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
     settings.onclick = () => { window.location.href = '/settings'; };
 
     const username = localStorage.getItem('username') || 'študent';

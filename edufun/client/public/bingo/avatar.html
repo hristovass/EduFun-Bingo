@@ -128,6 +128,7 @@
         if (!locked) {
     div.onclick = () => {
         localStorage.setItem("avatar_" + playerId, avatar.file);
+        localStorage.setItem("profileAvatar", "/bingo/images/avatars/" + avatar.file);
 
         document.getElementById("selectedAvatarImg").src = "images/avatars/" + avatar.file;
         const modal = document.getElementById("avatarModal");

@@ -205,12 +205,12 @@ body.dark #category-cards .selected {
         <button id="open-settings"
                 type="button"
                 class="px-3 py-1 mb-2 text-sm rounded-full border border-gray-300 hover:bg-gray-100 flex items-center gap-2">
-            ⚙ Settings
+            Nastavitve
         </button>
     </div>
 
     <header class="text-center space-y-2">
-        <h1 class="text-3xl font-bold text-gray-800">Bingo kviz 🎯</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Quiz Bingo</h1>
         <p class="text-gray-500">Pripravi igro in pritisni gumb za začetek kvingota!</p>
     </header>
 
@@ -218,13 +218,13 @@ body.dark #category-cards .selected {
     <button
     type="button"
     onclick="window.location.href='leaderboard.html'"
-    class="w-full px-5 py-3 rounded-full border border-purple-300
+    class="dashboard-action leaderboard-action w-full px-5 py-3 rounded-full border border-purple-300
            bg-gradient-to-r from-purple-50 to-pink-50
            text-purple-700 font-semibold tracking-wide
            shadow-sm hover:shadow-md hover:from-purple-100 hover:to-pink-100
            transition-all duration-200 flex items-center justify-center gap-2">
     
-    <span class="text-xl">🏆</span>
+    <span class="menu-symbol" aria-hidden="true">01</span>
     <span>Poglej lestvico</span>
 </button>
 
@@ -232,13 +232,13 @@ body.dark #category-cards .selected {
 <button
     type="button"
     onclick="window.location.href='stats.html'"
-    class="mt-2 w-full px-5 py-3 rounded-full border border-purple-300
+    class="dashboard-action statistics-action mt-2 w-full px-5 py-3 rounded-full border border-purple-300
            bg-gradient-to-r from-purple-50 to-pink-50
            text-purple-700 font-semibold tracking-wide
            shadow-sm hover:shadow-md hover:from-purple-100 hover:to-pink-100
            transition-all duration-200 flex items-center justify-center gap-2">
     
-    <span class="text-xl">📊</span>
+    <span class="menu-symbol" aria-hidden="true">02</span>
     <span>Statistika znanja</span>
 </button>
 
@@ -256,7 +256,7 @@ body.dark #category-cards .selected {
            transition-all
            font-semibold
            w-full">
-    📝 Exam mode: OFF
+    Izpitni način: IZKLOPLJEN
 </button>
 
   <select
@@ -269,9 +269,9 @@ body.dark #category-cards .selected {
            hover:bg-[#202742]
            focus:outline-none
            focus:border-[#8f9cff]">
-    <option value="10">10 pitanja</option>
-    <option value="15" selected>15 pitanja</option>
-    <option value="20">20 pitanja</option>
+    <option value="10">10 vprašanj</option>
+    <option value="15" selected>15 vprašanj</option>
+    <option value="20">20 vprašanj</option>
 </select>
 </div>
 
@@ -393,7 +393,7 @@ const examHint = document.getElementById("examHint");
 
 function renderExamUI() {
   if (!examToggleBtn) return;
-  examToggleBtn.textContent = examMode ? "📝 Exam mode: ON" : "📝 Exam mode: OFF";
+  examToggleBtn.textContent = examMode ? "Izpitni način: VKLOPLJEN" : "Izpitni način: IZKLOPLJEN";
   if (examHint) examHint.classList.toggle("hidden", !examMode);
   enableStartButton(); // da se odmah primeni uslov
 }
@@ -471,7 +471,7 @@ function renderPlayersFromState() {
                 <span>${player.first_name} ${player.last_name}</span>
                 <button class="px-2 py-1 text-sm rounded avatar-btn"
                         onclick="openAvatarSelector('${key}')">
-                    Izberi avatar 🎨
+                    Izberi avatar
                 </button>
             </div>
             <img id="avatar-${key}"
@@ -514,14 +514,11 @@ async function loadCategories() {
 
     // ikone glede na ime predmeta (fallback = 📚)
     const subjectIcons = {
-        "Angleščina": "📘",
-        "Anglščina": "📘",
-        "Matematika": "➕",
-        "Naravoslovje": "🌿",
-        "Družboslovje": "🌍",
-        "Slovenščina": "📖",
-        "Likovna umetnost": "🎨",
-        "Glasba": "🎵"
+        "Algoritmi": "◇",
+        "Matematika": "∑",
+        "Podatkovne Baze": "▤",
+        "Podatkovne baze": "▤",
+        "Programiranje": "&lt;/&gt;"
     };
 
     categories.forEach(cat => {
@@ -529,7 +526,7 @@ async function loadCategories() {
         card.dataset.id = cat.id;
         card.dataset.name = cat.name;
 
-        const icon = subjectIcons[cat.name] || "📚";
+        const icon = subjectIcons[cat.name] || String(cat.name).slice(0, 3).toUpperCase();
 
         // Base card style (light mode)
         card.className =
@@ -664,7 +661,7 @@ window.api.onPlayerAdded((player) => {
             <span>${player.first_name} ${player.last_name}</span>
             <button class="px-2 py-1 text-sm rounded avatar-btn"
                     onclick="openAvatarSelector('${key}')">
-                Izberi avatar 🎨
+                Izberi avatar
             </button>
         </div>
         <img id="avatar-${key}"
