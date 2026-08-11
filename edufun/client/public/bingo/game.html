@@ -567,19 +567,19 @@
                     updateProgressBar(timeRemaining);
                 }
                 else {
-                const hasBonus = playerBonus[currentPlayer];
-                timeRemaining = hasBonus ? 20 : 15;
+                    const hasBonus = playerBonus[currentPlayer];
+                    timeRemaining = hasBonus ? 20 : 15;
 
-                updateTimerDisplay(timeRemaining);
-                if (hasBonus) {
-                    timerDisplay.innerText = "BONUS +5 sekund";
-                    progressBar.classList.add("bonus-active");
-                } else {
-                    progressBar.classList.remove("bonus-active");
+                    updateTimerDisplay(timeRemaining);
+                    if (hasBonus) {
+                        timerDisplay.innerText = "BONUS +5 sekund";
+                        progressBar.classList.add("bonus-active");
+                    } else {
+                        progressBar.classList.remove("bonus-active");
+                    }
+                    updateProgressBar(timeRemaining);
+                    playerBonus[currentPlayer] = false;
                 }
-                updateProgressBar(timeRemaining);
-                playerBonus[currentPlayer] = false;
-            }
 
                 playBgMusic();
 
@@ -698,7 +698,7 @@
 
                 limitIndex = gameData.length - 1;
                 if (examMode) {
-                limitIndex = Math.min(gameData.length - 1, examQuestionCount - 1);
+                    limitIndex = Math.min(gameData.length - 1, examQuestionCount - 1);
                 }
                 if (examMode) {
                     if (skipBtn) skipBtn.classList.add("hidden");
@@ -753,13 +753,13 @@
                 document.getElementById("2").innerText = q.options[2];
                 document.getElementById("3").innerText = q.options[3];
 
-                if (!examMode){
+                if (!examMode) {
                     updateSkipButton();
                     updateFiftyButton();
                 }
-                
+
                 startTimer();
-                
+
             }
 
             /* ---------- ODGOVOR NA VPRAŠANJE ---------- */
@@ -811,13 +811,13 @@
                         failStreak[pIdx] = 0;
 
                         if (!examMode) {
-                        streaks[pIdx] = (streaks[pIdx] || 0) + 1;
-                        if (streaks[pIdx] === 3) {
-                            playerBonus[pIdx] = true;
-                            streaks[pIdx] = 0;
-                            showToast(playerNames[pIdx] + " je pridobil 5 dodatnih sekund.", "success");
+                            streaks[pIdx] = (streaks[pIdx] || 0) + 1;
+                            if (streaks[pIdx] === 3) {
+                                playerBonus[pIdx] = true;
+                                streaks[pIdx] = 0;
+                                showToast(playerNames[pIdx] + " je pridobil 5 dodatnih sekund.", "success");
+                            }
                         }
-                    }
 
                         playCorrect();
                         button.classList.add("bg-green-500", "text-white", "border-green-500");
@@ -1017,44 +1017,44 @@
             }
 
             function calcGrade(percent) {
-  if (percent >= 90) return 10;
-  if (percent >= 80) return 9;
-  if (percent >= 70) return 8;
-  if (percent >= 60) return 7;
-  if (percent >= 50) return 6;
-  return 5;
-}
+                if (percent >= 90) return 10;
+                if (percent >= 80) return 9;
+                if (percent >= 70) return 8;
+                if (percent >= 60) return 7;
+                if (percent >= 50) return 6;
+                return 5;
+            }
 
-function endExam() {
-  gameOver = true;
-  clearInterval(timerInterval);
-  disableAnswerButtons();
-  highlightTurn(-1);
+            function endExam() {
+                gameOver = true;
+                clearInterval(timerInterval);
+                disableAnswerButtons();
+                highlightTurn(-1);
 
-  const percent = Math.round((examCorrect / examQuestionCount) * 100);
-  const grade = calcGrade(percent);
+                const percent = Math.round((examCorrect / examQuestionCount) * 100);
+                const grade = calcGrade(percent);
 
-  // koristi postojeći winner modal kao "Exam finished"
-  const title = document.getElementById('winnerName');
-  const percentEl = document.getElementById("finalPercentText");
-  const goalEl = document.getElementById("goalResultText");
-  const list = document.getElementById('winnerAchievements');
+                // koristi postojeći winner modal kao "Exam finished"
+                const title = document.getElementById('winnerName');
+                const percentEl = document.getElementById("finalPercentText");
+                const goalEl = document.getElementById("goalResultText");
+                const list = document.getElementById('winnerAchievements');
 
-  if (title) title.textContent = "✅ Exam završen";
-  if (percentEl) percentEl.textContent = `Tačno: ${examCorrect}/${examQuestionCount} (${percent}%)`;
-  if (goalEl) goalEl.textContent = `Ocena: ${grade}`;
+                if (title) title.textContent = "✅ Exam završen";
+                if (percentEl) percentEl.textContent = `Tačno: ${examCorrect}/${examQuestionCount} (${percent}%)`;
+                if (goalEl) goalEl.textContent = `Ocena: ${grade}`;
 
-  // sakrij “achievements” deo (nije bitan za exam) ili ga očisti
-  if (list) {
-    list.innerHTML = `<li>📝 Režim: Exam (bez pomoći)</li>`;
-  }
+                // sakrij “achievements” deo (nije bitan za exam) ili ga očisti
+                if (list) {
+                    list.innerHTML = `<li>📝 Režim: Exam (bez pomoći)</li>`;
+                }
 
-  // sakrij listu netačnih ako ne želiš
-  const incorrectSection = document.getElementById('incorrectSection');
-  if (incorrectSection) incorrectSection.classList.add('hidden');
+                // sakrij listu netačnih ako ne želiš
+                const incorrectSection = document.getElementById('incorrectSection');
+                if (incorrectSection) incorrectSection.classList.add('hidden');
 
-  document.getElementById('winnerModal')?.classList.remove('hidden');
-}
+                document.getElementById('winnerModal')?.classList.remove('hidden');
+            }
 
 
             function showWinnerModal(name, winnerIdx) {
@@ -1304,22 +1304,37 @@ function endExam() {
                     .replaceAll('"', "&quot;");
             }
 
-            function resolveLesson(lessonsJson, cat) {
+            function resolveLesson(lessonsJson, cat, ageGroupId) {
                 if (!lessonsJson || lessonsJson.error) return null;
 
-                // 1) ID match (če je cat number id)
+                // 1) ID match
                 const idKey = String(cat);
+
                 if (lessonsJson.lessonsById && lessonsJson.lessonsById[idKey]) {
-                    return lessonsJson.lessonsById[idKey];
+                    const lessonById = lessonsJson.lessonsById[idKey];
+
+                    if (ageGroupId && lessonById[String(ageGroupId)]) {
+                        return lessonById[String(ageGroupId)];
+                    }
+
+                    if (lessonById.title) {
+                        return lessonById;
+                    }
                 }
 
-                // 2) Name match (fallback)
                 const nameKey = normalizeKey(cat);
+
                 if (lessonsJson.lessonsByName) {
-                    if (lessonsJson.lessonsByName[nameKey]) return lessonsJson.lessonsByName[nameKey];
+                    if (lessonsJson.lessonsByName[nameKey]) {
+                        return lessonsJson.lessonsByName[nameKey];
+                    }
+
                     const keys = Object.keys(lessonsJson.lessonsByName);
                     const found = keys.find(k => normalizeKey(k) === nameKey);
-                    if (found) return lessonsJson.lessonsByName[found];
+
+                    if (found) {
+                        return lessonsJson.lessonsByName[found];
+                    }
                 }
 
                 return null;
@@ -1329,7 +1344,7 @@ function endExam() {
             async function showLessonThenIntro() {
                 try {
                     const paramsExam = JSON.parse(localStorage.getItem('parameters') || 'null');
-                    if(paramsExam?.examMode) {
+                    if (paramsExam?.examMode) {
                         startIntro();
                         return;
                     }
@@ -1347,6 +1362,7 @@ function endExam() {
                         startIntro();
                         return;
                     }
+                    const ageGroupId = params.grade;
 
                     if (!window.api || !window.api.getLocalLessons) {
                         startIntro();
@@ -1363,7 +1379,7 @@ function endExam() {
                     body.innerHTML = "";
 
                     for (const cat of params.category) {
-                        const lesson = resolveLesson(lessonsJson, cat);
+                        const lesson = resolveLesson(lessonsJson, cat, ageGroupId);
 
                         const section = document.createElement('div');
                         section.className = "p-4 rounded-xl border bg-white";
@@ -1407,8 +1423,6 @@ function endExam() {
                 }
             }
 
-            // ✅ NE uporabljaj window.onload = startIntro; (ker bi preskočil lesson)
-            // ✅ Naj se vedno začne z lesson (če obstaja), potem timer
             window.addEventListener('load', showLessonThenIntro);
 
         </script>
@@ -1453,66 +1467,64 @@ function endExam() {
                 class="text-gray-400 hover:text-gray-600">✖</button>
         </div>
 
-        <!-- ✅ Lesson overlay (BEFORE timer) -->
-        <div id="lessonOverlay"
-        class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/40">
+        <div id="lessonOverlay" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/40">
 
-        <div class="bg-white rounded-2xl shadow-2xl p-6 w-[92%] max-w-2xl space-y-4 text-black">
-            <div class="flex items-start justify-between gap-4">
-            <div>
-                <h2 id="lessonTitle" class="text-2xl font-bold text-black">Mini predavanje</h2>
-                <p id="lessonSubtitle" class="text-sm text-black/80 mt-1">
-                Preden začneš, na hitro ponovi snov.
-                </p>
+            <div class="bg-white rounded-2xl shadow-2xl p-6 w-[92%] max-w-2xl space-y-4 text-black">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h2 id="lessonTitle" class="text-2xl font-bold text-black">Mini predavanje</h2>
+                        <p id="lessonSubtitle" class="text-sm text-black/80 mt-1">
+                            Preden začneš, na hitro ponovi snov.
+                        </p>
+                    </div>
+                    <button id="lessonSkip" class="text-sm px-3 py-1 rounded-lg border hover:bg-gray-50">
+                        Preskoči
+                    </button>
+                </div>
+
+                <div id="lessonBody" class="space-y-4 max-h-[55vh] overflow-auto pr-1"></div>
+
+                <div class="mt-4 text-sm text-center">
+                    <p class="font-semibold mb-2" style="color:#000 !important;">
+                        Izberi cilj za to igro
+                    </p>
+
+                    <div class="flex justify-center gap-6">
+                        <label class="flex items-center gap-2 cursor-pointer"
+                            style="color:#000 !important; font-weight:600;">
+                            <input type="radio" name="goal" value="60" class="accent-blue-600 scale-110">
+                            <span style="color:#000 !important;">60%</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer"
+                            style="color:#000 !important; font-weight:600;">
+                            <input type="radio" name="goal" value="80" class="accent-blue-600 scale-110" checked>
+                            <span style="color:#000 !important;">80%</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer"
+                            style="color:#000 !important; font-weight:600;">
+                            <input type="radio" name="goal" value="90" class="accent-blue-600 scale-110">
+                            <span style="color:#000 !important;">90%</span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button id="lessonContinue" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                        Nadaljuj na igro ▶️
+                    </button>
+                </div>
             </div>
-            <button id="lessonSkip" class="text-sm px-3 py-1 rounded-lg border hover:bg-gray-50">
-                Preskoči
-            </button>
+        </div>
+
+        <div id="startOverlay" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div class="start-card rounded-2xl shadow-2xl px-8 py-6 text-center space-y-3 bg-white text-black">
+                <h2 class="text-2xl font-bold">Pripravljeni na igro?</h2>
+                <p class="text-sm text-black/80">Igra se začne čez</p>
+                <div id="countdown" class="text-5xl font-extrabold text-blue-600">3</div>
             </div>
-
-            <div id="lessonBody" class="space-y-4 max-h-[55vh] overflow-auto pr-1"></div>
-
-        <!-- 🎯 Izbira cilja -->
-        <div class="mt-4 text-sm text-center">
-        <p class="font-semibold mb-2" style="color:#000 !important;">
-            Izberi cilj za to igro
-        </p>
-
-        <div class="flex justify-center gap-6">
-            <label class="flex items-center gap-2 cursor-pointer" style="color:#000 !important; font-weight:600;">
-            <input type="radio" name="goal" value="60" class="accent-blue-600 scale-110">
-            <span style="color:#000 !important;">60%</span>
-            </label>
-
-            <label class="flex items-center gap-2 cursor-pointer" style="color:#000 !important; font-weight:600;">
-            <input type="radio" name="goal" value="80" class="accent-blue-600 scale-110" checked>
-            <span style="color:#000 !important;">80%</span>
-            </label>
-
-            <label class="flex items-center gap-2 cursor-pointer" style="color:#000 !important; font-weight:600;">
-            <input type="radio" name="goal" value="90" class="accent-blue-600 scale-110">
-            <span style="color:#000 !important;">90%</span>
-            </label>
-        </div>
-        </div>
-
-
-            <div class="flex justify-end gap-2 pt-2">
-            <button id="lessonContinue" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
-                Nadaljuj na igro ▶️
-            </button>
-            </div>
-        </div>
-        </div>
-
-        <!-- ✅ Start overlay (timer) OUTSIDE lessonOverlay -->
-        <div id="startOverlay"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-        <div class="start-card rounded-2xl shadow-2xl px-8 py-6 text-center space-y-3 bg-white text-black">
-            <h2 class="text-2xl font-bold">Pripravljeni na igro?</h2>
-            <p class="text-sm text-black/80">Igra se začne čez</p>
-            <div id="countdown" class="text-5xl font-extrabold text-blue-600">3</div>
-        </div>
         </div>
 
 

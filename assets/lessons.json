@@ -11,6 +11,7 @@
         "Tipične napake: pogoji v zanki, left/right, mid"
       ]
     },
+
     "2": {
       "title": "Matematika – Osnove",
       "minutes": 2,
@@ -21,6 +22,7 @@
         "Gauss/Gauss-Jordan: pivot, zamenjava vrstic"
       ]
     },
+
     "4": {
       "title": "Podatkovne baze – SQL osnove",
       "minutes": 2,
@@ -31,41 +33,84 @@
         "Normalizacija (1NF, 2NF, 3NF) + ACID"
       ]
     },
+
     "1": {
-      "title": "Programiranje – OOP osnove",
-      "minutes": 2,
-      "content": "Objektno usmerjeno programiranje (OOP) temelji na razredih in objektih:\n- Razred (class) je predloga.\n- Objekt je instanca razreda.\n\nGlavni OOP koncepti:\n- Enkapsulacija: skrijemo podatke in nadzorujemo dostop (private/public).\n- Dedovanje: podrazred prevzame lastnosti/metode nadrazreda.\n- Polimorfizem: ista metoda/mesnik, različne izvedbe (odvisno od tipa objekta).\n\nOverloading vs overriding:\n- Overloading: isto ime, različni parametri.\n- Overriding: podrazred prepiše implementacijo metode.\n\nPomembno v praksi:\n- Izjeme (try/catch) za runtime napake.\n- Kolekcije (npr. list/arraylist) + generiki (List<String>).\n- Moderni pojmi: garbage collection, thread-safe, race condition, dependency injection, design patterns (Singleton/Factory).",
-      "points": [
-        "OOP: class/object, enkapsulacija, dedovanje, polimorfizem",
-        "Overloading vs overriding + abstract vs interface",
-        "Izjeme, kolekcije, generiki + moderni pojmi (GC, thread-safe, DI, patterns)"
-      ]
+      "1": {
+        "title": "Programiranje – 1. letnik",
+        "minutes": 2,
+        "content": "V 1. letniku se osredotočamo na osnovne koncepte programiranja.\n\nSpremenljivke uporabljamo za shranjevanje podatkov, podatkovni tipi pa določajo, kakšne vrednosti lahko spremenljivka vsebuje. Med osnovne tipe sodijo števila, besedilo in logične vrednosti true/false.\n\nPogojni stavki, kot je if-else, omogočajo izvajanje različnih delov kode glede na izpolnjen pogoj.\n\nZanke uporabljamo za ponavljanje kode. Zanko for običajno uporabimo, ko poznamo število ponovitev, while pa takrat, ko želimo ponavljati kodo, dokler velja določen pogoj.\n\nFunkcija je ponovno uporaben blok kode, ki opravlja določeno nalogo. Funkcija lahko prejme parametre in z ukazom return vrne rezultat.\n\nPomembno je tudi razumeti osnovne operatorje, delo z nizi oziroma polji, sintaktične napake, razhroščevanje ter osnovno strukturo programa.",
+        "points": [
+          "Spremenljivke, podatkovni tipi in operatorji",
+          "if-else, for in while",
+          "Funkcije, parametri in osnovno razhroščevanje"
+        ]
+      },
+
+      "2": {
+        "title": "Programiranje – 2. letnik",
+        "minutes": 2,
+        "content": "V 2. letniku se programiranje nadgradi predvsem z objektno usmerjenim programiranjem (OOP).\n\nRazred (class) je predloga za ustvarjanje objektov, objekt pa je instanca razreda. Konstruktor se uporablja pri ustvarjanju in inicializaciji objektov.\n\nGlavni koncepti OOP so:\n- Enkapsulacija: podatke skrijemo in dostop do njih nadzorujemo.\n- Dedovanje: podrazred lahko prevzame lastnosti in metode nadrazreda.\n- Polimorfizem: ista metoda ali vmesnik se lahko obnaša različno glede na objekt.\n\nOverloading pomeni uporabo istega imena metode z različnimi parametri, overriding pa pomeni, da podrazred prepiše implementacijo metode nadrazreda.\n\nPomembne so tudi izjeme (try/catch), zbirke oziroma kolekcije, generiki in rekurzija.",
+        "points": [
+          "Razredi, objekti in konstruktorji",
+          "Enkapsulacija, dedovanje in polimorfizem",
+          "Overloading/overriding, izjeme, kolekcije in rekurzija"
+        ]
+      },
+
+      "3": {
+        "title": "Programiranje – 3. letnik",
+        "minutes": 2,
+        "content": "V 3. letniku se srečamo z naprednejšimi koncepti razvoja programske opreme.\n\nSerialization oziroma serializacija pomeni pretvorbo objekta v obliko, ki jo lahko shranimo ali prenesemo, deserializacija pa takšne podatke ponovno pretvori v objekt.\n\nTestiranje enot (unit testing) preverja posamezne dele programa, na primer funkcije ali metode, neodvisno od preostale aplikacije.\n\nPri večnitnem oziroma sočasnem programiranju lahko pride do race condition, ko več niti hkrati dostopa do skupnih podatkov in je rezultat odvisen od vrstnega reda izvajanja. Zato je pomemben koncept thread safety.\n\nMed naprednejše pristope sodijo tudi dependency injection, design patterns oziroma načrtovalski vzorci ter pravilna organizacija večjih programskih sistemov.",
+        "points": [
+          "Serialization in unit testing",
+          "Concurrency, race condition in thread safety",
+          "Dependency injection in design patterns"
+        ]
+      }
     }
   },
+
   "lessonsByName": {
     "algoritmi": {
       "title": "Algoritmi – Osnove",
       "minutes": 2,
       "content": "Algoritem je natančen postopek korakov. Big-O opisuje rast časa glede na n.\n- O(1): konstantno\n- O(log n): binarno iskanje (urejeno!)\n- O(n): en prehod\n- O(n^2): dvojne zanke\nTipične napake: napačne meje v binarnem iskanju, uporaba na neurejenih podatkih.",
-      "points": ["Big-O osnove", "Binarno iskanje", "Najpogostejše napake"]
+      "points": [
+        "Big-O osnove",
+        "Binarno iskanje",
+        "Najpogostejše napake"
+      ]
     },
+
     "matematika": {
       "title": "Matematika – Osnove",
       "minutes": 2,
       "content": "Vedno preveri pogoje in postopke. Limite: preveri nedoločene oblike (0/0, ∞/∞) in uporabi krajšanje/racionalizacijo. Matrike: dimenzije se morajo ujemati (A·B). Sistemi: Gauss/Gauss-Jordan in pivot.",
-      "points": ["Nedoločene oblike", "Matrike (dimenzije)", "Gauss/Gauss-Jordan (pivot)"]
+      "points": [
+        "Nedoločene oblike",
+        "Matrike (dimenzije)",
+        "Gauss/Gauss-Jordan (pivot)"
+      ]
     },
+
     "podatkovne baze": {
       "title": "Podatkovne baze – SQL osnove",
       "minutes": 2,
       "content": "Relacijske baze: tabele (vrstice/stolpci). PK enolično označi zapis, FK povezuje tabele. SQL: SELECT/WHERE/JOIN ter INSERT/UPDATE/DELETE. Normalizacija zmanjšuje redundanco (1NF–3NF). ACID opisuje lastnosti transakcij.",
-      "points": ["PK/FK + integriteta", "SQL osnove", "Normalizacija + ACID"]
+      "points": [
+        "PK/FK + integriteta",
+        "SQL osnove",
+        "Normalizacija + ACID"
+      ]
     },
+
     "programiranje": {
-      "title": "Programiranje – OOP osnove",
+      "title": "Programiranje",
       "minutes": 2,
-      "content": "OOP: razred vs objekt, enkapsulacija, dedovanje, polimorfizem. Overloading = različni parametri, overriding = prepis metode. Izjeme (try/catch), kolekcije in generiki. Moderno: GC, thread-safe, DI, vzorci (Singleton/Factory).",
-      "points": ["OOP 4 koncepti", "Overload vs override", "Izjeme + kolekcije + moderni pojmi"]
+      "content": "Predavanje za programiranje se prilagodi izbranemu letniku.",
+      "points": [
+        "Programiranje glede na izbrani letnik"
+      ]
     }
   }
 }
