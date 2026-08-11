@@ -1,5 +1,7 @@
 {
-  "meta": { "version": 1 },
+  "meta": {
+    "version": 1
+  },
   "lessonsById": {
     "3": {
       "title": "Algoritmi – Osnove",
@@ -13,14 +15,38 @@
     },
 
     "2": {
-      "title": "Matematika – Osnove",
-      "minutes": 2,
-      "content": "Pri matematičnih nalogah je najpomembnejše: definicija + pravilen postopek. Vedno preveri pogoje (domene), ali je izraz definiran, in ali dimenzije/koraki sploh omogočajo operacijo.\n\nLimite:\n- Najprej preveri nedoločene oblike (0/0, ∞/∞).\n- Pogosti triki: krajšanje, racionalizacija, preoblikovanje (in po potrebi L'Hôpital, če je dovoljen).\n\nMatrike:\n- Množenje A·B je možno le, če je št. stolpcev A = št. vrstic B.\n- Najpogostejše napake: napačne dimenzije, napačen vrstni red množenja.\n\nSistemi enačb:\n- Gauss/Gauss-Jordan: pazljivo s pivotom (ničelni pivot → zamenjaj vrstico).",
-      "points": [
-        "Nedoločene oblike + triki (krajšanje, racionalizacija)",
-        "Matrike: dimenzije, vrstni red množenja",
-        "Gauss/Gauss-Jordan: pivot, zamenjava vrstic"
-      ]
+      "1": {
+        "title": "Matematika – 1. letnik",
+        "minutes": 2,
+        "content": "V 1. letniku se osredotočamo na osnovne matematične pojme, ki se pojavljajo v vprašanjih: algebra, funkcije, zaporedja, limite, odvodi, matrike, vektorji, verjetnost in trigonometrija.\n\nPri potencah velja na primer x^a · x^b = x^(a+b), pri deljenju potenc z isto osnovo pa eksponente odštevamo. Pri kvadratnih enačbah je pomembna diskriminanta D = b² - 4ac. Če je D > 0, imamo dve realni rešitvi, če je D = 0 eno dvojno rešitev, če je D < 0 pa ni realnih rešitev.\n\nPri funkcijah preverjamo definicijsko območje, ničle ter lastnosti sodih in lihih funkcij. Linearna funkcija ima obliko y = kx + n, kjer k predstavlja naklon premice.\n\nPri zaporedjih razlikujemo aritmetično zaporedje s konstantno razliko in geometrijsko zaporedje s konstantnim količnikom. Pri limitah opazujemo vrednost, ki se ji funkcija približuje, odvod pa predstavlja trenutno hitrost spreminjanja oziroma naklon tangente.\n\nPri matrikah so pomembne dimenzije, determinanta, transponiranje in inverzna matrika. Pri vektorjih uporabljamo dolžino in skalarni produkt; dva neničelna vektorja sta pravokotna, če je njun skalarni produkt enak 0.\n\nPri verjetnosti je verjetnost nemogočega dogodka 0, gotovega pa 1. Pomembni so tudi aritmetična sredina, mediana in modus. Pri trigonometriji velja sin²(x) + cos²(x) = 1.",
+        "points": [
+          "Algebra, potence, kvadratne enačbe in funkcije",
+          "Zaporedja, limite in osnovni odvodi",
+          "Matrike, vektorji, verjetnost in trigonometrija"
+        ]
+      },
+
+      "2": {
+        "title": "Matematika – 2. letnik",
+        "minutes": 2,
+        "content": "V 2. letniku nadgradimo matematično analizo, linearno algebro, kompleksna števila, verjetnost in statistiko.\n\nPri odvajanju poznamo odvode osnovnih funkcij: odvod sin(x) je cos(x), odvod cos(x) je -sin(x), odvod e^x je e^x in odvod ln(x) je 1/x. Pri sestavljenih funkcijah uporabljamo verižno pravilo, pri produktu pa pravilo produkta. Drugi odvod pomaga določati konveksnost in konkavnost funkcije.\n\nIntegral predstavlja obratno operacijo odvajanju. Nedoločeni integral vsebuje integracijsko konstanto C, določeni integral pa lahko interpretiramo kot predznačeno ploščino med grafom in osjo x. Pri limitah proti neskončnosti pogosto primerjamo rast števca in imenovalca.\n\nPri linearni algebri so pomembni determinanta, rang matrike, linearna odvisnost in neodvisnost ter lastne vrednosti in lastni vektorji. Lastna vrednost λ in lastni vektor v zadoščata enačbi Av = λv.\n\nPri kompleksnih številih velja i² = -1. Kompleksno število z = a + bi ima realni del a in imaginarni del b. Konjugirano število dobimo tako, da spremenimo predznak imaginarnega dela.\n\nPri verjetnosti obravnavamo neodvisne dogodke, pogojno verjetnost P(A|B), pričakovano vrednost, varianco in standardni odklon. Pomembni sta tudi binomska in normalna porazdelitev. Pri funkcijah razlikujemo injektivnost, surjektivnost in bijektivnost.",
+        "points": [
+          "Odvodi, integrali, limite in drugi odvod",
+          "Linearna algebra in kompleksna števila",
+          "Pogojna verjetnost, statistika in bijektivne funkcije"
+        ]
+      },
+
+      "3": {
+        "title": "Matematika – 3. letnik",
+        "minutes": 2,
+        "content": "V 3. letniku se pojavijo funkcije več spremenljivk, diferencialne enačbe, naprednejša linearna algebra, numerične metode, statistika in optimizacija.\n\nPri funkcijah več spremenljivk uporabljamo parcialne odvode. Gradient je vektor parcialnih odvodov in kaže v smer najhitrejšega naraščanja funkcije. Hessova matrika vsebuje druge parcialne odvode. Pri optimizaciji z omejitvami uporabljamo Lagrangeeve multiplikatorje.\n\nDvojni integral lahko predstavlja prostornino pod ploskvijo. Pri zamenjavi spremenljivk uporabljamo Jacobijevo matriko in Jacobijevo determinanto.\n\nDiferencialna enačba vsebuje neznano funkcijo in njene odvode. Red enačbe določa najvišji odvod. Pri linearnih diferencialnih enačbah drugega reda pogosto uporabimo karakteristično enačbo. Za numerično reševanje uporabljamo Newtonovo metodo, bisekcijsko metodo in Eulerjevo metodo.\n\nPri linearni algebri so pomembne lastne vrednosti, diagonalizacija, ortogonalne matrike, jedro linearne preslikave ter izrek o rangu in ničelnosti. Pozitivno definitna matrika zadošča pogoju xᵀAx > 0 za vsak neničelni vektor x.\n\nPri statistiki se pojavijo ničelna hipoteza, p-vrednost, interval zaupanja, centralni limitni izrek in kovarianca. Pri Markovskih verigah je prihodnje stanje ob sedanjem stanju neodvisno od preteklosti, prehodna matrika pa vsebuje verjetnosti prehodov.\n\nPri optimizaciji uporabljamo gradientni spust, kjer je pomembna pravilna izbira stopnje učenja. Med dodatnimi naprednimi pojmi sta Fourierjeva transformacija, ki predstavlja signal v frekvenčnem prostoru, in konvolucija dveh funkcij.",
+        "points": [
+          "Parcialni odvodi, gradient, Hessova matrika in dvojni integrali",
+          "Diferencialne enačbe, numerične metode in linearna algebra",
+          "Statistika, Markovske verige, optimizacija, Fourier in konvolucija"
+        ]
+      }
     },
 
     "4": {
@@ -83,13 +109,11 @@
     },
 
     "matematika": {
-      "title": "Matematika – Osnove",
+      "title": "Matematika",
       "minutes": 2,
-      "content": "Vedno preveri pogoje in postopke. Limite: preveri nedoločene oblike (0/0, ∞/∞) in uporabi krajšanje/racionalizacijo. Matrike: dimenzije se morajo ujemati (A·B). Sistemi: Gauss/Gauss-Jordan in pivot.",
+      "content": "Predavanje za matematiko se prilagodi izbranemu letniku.",
       "points": [
-        "Nedoločene oblike",
-        "Matrike (dimenzije)",
-        "Gauss/Gauss-Jordan (pivot)"
+        "Matematika glede na izbrani letnik"
       ]
     },
 
