@@ -1386,20 +1386,59 @@
 
                         if (!lesson) {
                             section.innerHTML = `
-          <h3 class="text-lg font-semibold text-gray-800">Predmet: ${escapeHtml(cat)}</h3>
-          <p class="text-sm text-gray-600 mt-2">Mini predavanje še ni dodano za to kategorijo.</p>
+            <h3 class="text-lg font-semibold text-gray-800">
+                Predmet: ${escapeHtml(cat)}
+            </h3>
+
+            <p class="text-sm text-gray-600 mt-2">
+                Mini predavanje še ni dodano za to kategorijo.
+            </p>
         `;
                         } else {
                             const pts = Array.isArray(lesson.points) ? lesson.points : [];
+
+                            section.className = "";
+
                             section.innerHTML = `
-          <h3 class="text-lg font-semibold text-gray-800">${escapeHtml(lesson.title || String(cat))}</h3>
-          <p class="text-xs text-gray-500 mt-1">Čas branja: ~${lesson.minutes ?? 2} min</p>
-          <div class="text-sm text-gray-700 mt-3 whitespace-pre-line">${escapeHtml(lesson.content || "")}</div>
-          ${pts.length ? `
-            <ul class="list-disc list-inside text-sm text-gray-700 mt-3 space-y-1">
-              ${pts.map(p => `<li>${escapeHtml(p)}</li>`).join("")}
-            </ul>
-          ` : ""}
+            <div class="lesson-card">
+
+                <div class="lesson-header">
+                    <div>
+                        <div class="lesson-badge">
+                            🎓 ${escapeHtml(ageGroupId)}. letnik
+                        </div>
+
+                        <h3 class="lesson-main-title">
+                            📘 ${escapeHtml(lesson.title || String(cat))}
+                        </h3>
+                    </div>
+
+                    <div class="lesson-time">
+                        ⏱ ${lesson.minutes ?? 2} min
+                    </div>
+                </div>
+
+                <div class="lesson-content">
+                    ${escapeHtml(lesson.content || "")}
+                </div>
+
+                ${pts.length ? `
+                    <div class="lesson-summary">
+                        <div class="lesson-summary-title">
+                            ✨ Zapomni si
+                        </div>
+
+                        <div class="lesson-points">
+                            ${pts.map(p => `
+                                <div class="lesson-point">
+                                    ✓ ${escapeHtml(p)}
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
+                ` : ""}
+
+            </div>
         `;
                         }
 
