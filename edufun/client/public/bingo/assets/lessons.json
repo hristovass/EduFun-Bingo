@@ -4,15 +4,40 @@
   },
   "lessonsById": {
     "3": {
-      "title": "Algoritmi – Osnove",
-      "minutes": 2,
-      "content": "Algoritem je natančen postopek korakov za rešitev problema. Na testih je pogosto ključno razumeti časovno zahtevnost (Big-O) — kako hitro raste čas, ko n raste.\n\nTipične zahtevnosti:\n- O(1): konstantno (npr. dostop po indeksu)\n- O(log n): logaritemsko (binarno iskanje v urejenih podatkih)\n- O(n): en prehod čez seznam\n- O(n log n): učinkovito sortiranje\n- O(n^2): dvojne zanke, pogosto prepočasno\n\nBinarno iskanje deluje samo na UREJENIH podatkih. Vedno razpoloviš interval, zato je O(log n). Tipične napake: napačne meje (left/right), napačen pogoj v zanki (infinite loop), uporaba binarnega iskanja na neurejenih podatkih.",
-      "points": [
-        "Big-O: O(1), O(log n), O(n), O(n log n), O(n^2)",
-        "Binarno iskanje: urejenost + pravilne meje",
-        "Tipične napake: pogoji v zanki, left/right, mid"
-      ]
+      "1": {
+        "title": "Algoritmi – 1. letnik",
+        "minutes": 2,
+        "content": "V 1. letniku se osredotočamo na osnovne algoritme, podatkovne strukture, rekurzijo in analizo časovne ter prostorske zahtevnosti.\n\nPri analizi algoritmov uporabljamo zapis Big-O. O(1) pomeni konstantno zahtevnost, O(log n) je značilna za binarno iskanje, O(n) za en prehod čez podatke, O(n log n) za učinkovite algoritme razvrščanja, O(n²) pa pogosto nastane pri dveh ugnezdenih zankah.\n\nMed osnovnimi algoritmi za razvrščanje so Selection Sort, Bubble Sort, Insertion Sort, Merge Sort in Quick Sort. Selection Sort ima v najslabšem primeru časovno zahtevnost O(n²), Merge Sort pa O(n log n).\n\nPomembne podatkovne strukture so sklad, vrsta, povezani seznam in binarno drevo. Vrsta deluje po načelu FIFO, sklad pa po načelu LIFO. V binarnem drevesu ima vozlišče največ dva otroka. Pri binarnem iskalnem drevesu inorder obhod vrne ključe v naraščajočem vrstnem redu, če so ključi različni.\n\nRekurzivni algoritem mora imeti bazni primer, ki ustavi rekurzijo. Rekurzivni izračun faktoriele uporablja klicni sklad in ima prostorsko zahtevnost O(n).\n\nPri grafih sta osnovna algoritma BFS in DFS. BFS uporablja vrsto in v neuteženem grafu najde najkrajšo pot glede na število povezav.",
+        "points": [
+          "Big-O: O(1), O(log n), O(n), O(n log n), O(n²)",
+          "Selection Sort, Merge Sort, rekurzija in bazni primer",
+          "Vrsta, sklad, povezani seznam, BST in BFS"
+        ]
+      },
+
+      "2": {
+        "title": "Algoritmi – 2. letnik",
+        "minutes": 2,
+        "content": "V 2. letniku nadgradimo osnovne algoritme z dinamičnim programiranjem, uravnoteženimi drevesi, kopicami, grafovskimi algoritmi in analizo zahtevnejših problemov.\n\nDinamično programiranje je primerno za probleme, ki imajo optimalno podstrukturo in prekrivajoče se podprobleme. Optimalna podstruktura pomeni, da lahko optimalno rešitev problema sestavimo iz optimalnih rešitev njegovih podproblemov.\n\nAVL drevo je uravnoteženo binarno iskalno drevo. Njegova višina je O(log n). Po vstavljanju ali brisanju uporabljamo rotacije, da ponovno vzpostavimo ravnotežje.\n\nBinarna kopica je primerna za implementacijo prioritetne vrste. Bottom-up gradnja kopice ima časovno zahtevnost O(n).\n\nPri Kruskalovem algoritmu za minimalno vpeto drevo pogosto uporabljamo strukturo Union-Find za učinkovito zaznavanje ciklov.\n\nMasterjev izrek pomaga določiti asimptotično zahtevnost določenih rekurenc oblike T(n) = aT(n/b) + f(n).\n\nBranch and bound sistematično raziskuje prostor rešitev in zavrže veje, ki ne morejo vsebovati boljše rešitve. Pri zahtevnosti problemov je pomemben tudi pojem NP-polnosti: NP-poln problem je v razredu NP in je vsaj tako težak kot vsi drugi problemi v NP glede na polinomske redukcije.",
+        "points": [
+          "Dinamično programiranje in optimalna podstruktura",
+          "AVL drevesa, rotacije, heap in Union-Find",
+          "Masterjev izrek, branch and bound in NP-polnost"
+        ]
+      },
+
+      "3": {
+        "title": "Algoritmi – 3. letnik",
+        "minutes": 2,
+        "content": "V 3. letniku obravnavamo naprednejše algoritme za omrežni pretok, randomizirane in online algoritme ter zahtevnejšo analizo računske zahtevnosti.\n\nPri problemu maksimalnega pretoka uporabljamo rezidualni graf. Rezidualni graf prikazuje, koliko dodatnega pretoka lahko še pošljemo po povezavah oziroma koliko obstoječega pretoka lahko vrnemo nazaj. Augmentacijska pot je pot od izvora do ponora v rezidualnem grafu, po kateri lahko povečamo pretok.\n\nEdmonds-Karp je različica Ford-Fulkersonovega algoritma, ki za izbiro augmentacijske poti uporablja BFS. Njegova časovna zahtevnost je O(VE²).\n\nPri močno povezanih komponentah lahko usmerjeni graf skrčimo v kondenzacijski graf. Vsaka močno povezana komponenta postane eno vozlišče, dobljeni graf pa je DAG.\n\nRandomizirani algoritmi uporabljajo naključnost. Las Vegas algoritem vedno vrne pravilen rezultat, vendar je njegov čas izvajanja lahko naključna spremenljivka.\n\nOnline algoritem sprejema odločitve brez poznavanja celotnega prihodnjega vhoda. Njegovo kakovost lahko ocenjujemo s competitive ratio, ki primerja rezultat online algoritma z optimalnim offline algoritmom.\n\nPseudo-polinomska zahtevnost pomeni, da je čas izvajanja polinomski glede na numerično vrednost vhodnih števil, ne pa nujno glede na dolžino njihovega zapisa.",
+        "points": [
+          "Rezidualni graf, augmentacijske poti in Edmonds-Karp",
+          "Močno povezane komponente in kondenzacijski graf",
+          "Las Vegas, online algoritmi, competitive ratio in pseudo-polinomska zahtevnost"
+        ]
+      }
     },
+
 
     "2": {
       "1": {
@@ -50,14 +75,38 @@
     },
 
     "4": {
-      "title": "Podatkovne baze – SQL osnove",
-      "minutes": 2,
-      "content": "Relacijska baza podatkov shranjuje podatke v tabelah. Vrstica (row) je zapis, stolpec (column) je atribut. DBMS (npr. MySQL) omogoča poizvedovanje, varnost in transakcije.\n\nKljuči:\n- Primarni ključ (PK) enolično identificira zapis.\n- Tuji ključ (FK) povezuje tabele in zagotavlja referenčno integriteto.\n\nOsnovni SQL:\n- SELECT bere podatke, WHERE filtrira.\n- JOIN povezuje tabele (na pogost način preko PK/FK).\n- INSERT/UPDATE/DELETE spreminjajo podatke.\n\nNormalizacija zmanjšuje redundanco:\n- 1NF: atomske vrednosti\n- 2NF: neključni atributi so odvisni od celotnega PK\n- 3NF: brez tranzitivnih odvisnosti\n\nTransakcije in ACID:\nAtomicity (vse ali nič), Consistency, Isolation, Durability.",
-      "points": [
-        "PK/FK + referenčna integriteta",
-        "SELECT/WHERE/JOIN + INSERT/UPDATE/DELETE",
-        "Normalizacija (1NF, 2NF, 3NF) + ACID"
-      ]
+      "1": {
+        "title": "Podatkovne baze – 1. letnik",
+        "minutes": 2,
+        "content": "V 1. letniku se osredotočamo na relacijski model, SQL, omejitve, povezovanje tabel in osnovno normalizacijo.\n\nRelacijska podatkovna baza shranjuje podatke v tabelah. Primarni ključ enolično identificira zapis, tuji ključ pa povezuje zapise različnih tabel. Omejitev ON DELETE CASCADE pomeni, da se ob brisanju nadrejenega zapisa samodejno izbrišejo tudi ustrezni podrejeni zapisi.\n\nSQL omejitev CHECK preverja, ali nova ali spremenjena vrednost izpolnjuje določen pogoj. SELECT DISTINCT iz rezultata odstrani podvojene kombinacije vrednosti.\n\nOperator IN preverja, ali je vrednost enaka eni izmed navedenih vrednosti, na primer WHERE id IN (2, 5, 8).\n\nUNION združi rezultate dveh združljivih poizvedb in odstrani podvojene vrstice, UNION ALL pa podvojene vrstice ohrani. Poizvedbi, povezani z UNION, morata imeti združljivo število stolpcev in združljive podatkovne tipe na ustreznih mestih.\n\nVIEW je navidezna tabela, definirana s poizvedbo. Za spreminjanje obstoječih podatkov uporabljamo UPDATE, pri čemer moramo biti posebej pozorni na pogoj WHERE.",
+        "points": [
+          "PK/FK, CHECK in ON DELETE CASCADE",
+          "DISTINCT, IN, UNION in UNION ALL",
+          "VIEW, UPDATE in osnovni SQL"
+        ]
+      },
+
+      "2": {
+        "title": "Podatkovne baze – 2. letnik",
+        "minutes": 2,
+        "content": "V 2. letniku nadgradimo SQL z zahtevnejšimi povezavami, indeksi, transakcijami in programskimi elementi podatkovne baze.\n\nRIGHT JOIN vrne vse vrstice iz desne tabele in ujemajoče se vrstice iz leve tabele. Če ujemanja ni, so vrednosti atributov leve tabele NULL.\n\nSestavljeni indeks je indeks nad več stolpci, na primer (A, B). Vrstni red atributov v sestavljenem indeksu je pomemben, saj vpliva na to, katere poizvedbe ga lahko učinkovito uporabijo.\n\nTransakcija združuje več povezanih operacij v eno logično celoto. Klasičen primer je prenos denarja med dvema računoma: zmanjšanje stanja prvega računa in povečanje stanja drugega morata biti izvedena skupaj. Če ena operacija ne uspe, je treba spremembe razveljaviti.\n\nStored procedure oziroma shranjena procedura je programska rutina, shranjena v podatkovni bazi in izvedena na strežniku podatkovne baze. Uporablja se lahko za združevanje več SQL ukazov in poslovne logike.",
+        "points": [
+          "RIGHT JOIN in zahtevnejše povezovanje tabel",
+          "Sestavljeni indeksi",
+          "Transakcije in stored procedures"
+        ]
+      },
+
+      "3": {
+        "title": "Podatkovne baze – 3. letnik",
+        "minutes": 2,
+        "content": "V 3. letniku obravnavamo naprednejšo normalizacijo, indeksne strukture, optimizacijo poizvedb, sočasne transakcije in obnovo podatkovne baze.\n\nBoyce-Coddova normalna oblika (BCNF) je strožja od 3NF. Za vsako netrivialno funkcionalno odvisnost X -> Y mora biti X superključ. Pri analizi funkcionalnih odvisnosti uporabljamo Armstrongova pravila. Tranzitivnost pravi: če X -> Y in Y -> Z, potem X -> Z.\n\nZaprtje atributov X+ je množica vseh atributov, ki jih lahko funkcionalno določimo iz X. Če X+ vsebuje vse atribute relacije, je X superključ.\n\nZa diskovne indekse so primerna B+ drevesa, ker imajo velik faktor razvejitve in zato zmanjšujejo število potrebnih diskovnih dostopov.\n\nOptimizator poizvedb poskuša izbrati učinkovit načrt izvajanja. Zelo selektivne filtre pogosto izvede čim prej, ker s tem zmanjša število vmesnih vrstic in strošek nadaljnjih operacij.\n\nPri sočasnih transakcijah se lahko pojavita non-repeatable read in phantom read. Non-repeatable read pomeni, da ista transakcija dvakrat prebere isti zapis in dobi različni potrjeni vrednosti. Phantom read pomeni, da ponovljena poizvedba z istim pogojem vrne drugačen nabor vrstic zaradi INSERT ali DELETE druge transakcije.\n\nWrite-ahead logging (WAL) zahteva, da se spremembe najprej zapišejo v transakcijski dnevnik in šele nato v podatkovne strani. To je pomembno pri obnovi sistema po izpadu.",
+        "points": [
+          "BCNF, Armstrongova pravila in zaprtje atributov",
+          "B+ drevesa in optimizacija poizvedb",
+          "Non-repeatable read, phantom read in WAL"
+        ]
+      }
     },
 
     "1": {
@@ -98,13 +147,11 @@
 
   "lessonsByName": {
     "algoritmi": {
-      "title": "Algoritmi – Osnove",
+      "title": "Algoritmi",
       "minutes": 2,
-      "content": "Algoritem je natančen postopek korakov. Big-O opisuje rast časa glede na n.\n- O(1): konstantno\n- O(log n): binarno iskanje (urejeno!)\n- O(n): en prehod\n- O(n^2): dvojne zanke\nTipične napake: napačne meje v binarnem iskanju, uporaba na neurejenih podatkih.",
+      "content": "Predavanje za algoritme se prilagodi izbranemu letniku.",
       "points": [
-        "Big-O osnove",
-        "Binarno iskanje",
-        "Najpogostejše napake"
+        "Algoritmi glede na izbrani letnik"
       ]
     },
 
@@ -118,13 +165,11 @@
     },
 
     "podatkovne baze": {
-      "title": "Podatkovne baze – SQL osnove",
+      "title": "Podatkovne baze",
       "minutes": 2,
-      "content": "Relacijske baze: tabele (vrstice/stolpci). PK enolično označi zapis, FK povezuje tabele. SQL: SELECT/WHERE/JOIN ter INSERT/UPDATE/DELETE. Normalizacija zmanjšuje redundanco (1NF–3NF). ACID opisuje lastnosti transakcij.",
+      "content": "Predavanje za podatkovne baze se prilagodi izbranemu letniku.",
       "points": [
-        "PK/FK + integriteta",
-        "SQL osnove",
-        "Normalizacija + ACID"
+        "Podatkovne baze glede na izbrani letnik"
       ]
     },
 
